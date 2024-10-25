@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 14:33:45
+ * @LastEditTime: 2024-10-25 16:07:25
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -58,7 +58,7 @@ function handleClick() {
     if (isMove.value) {
         return;
     }
-    const conment = editableRef.value.innerHTML.trim();
+    const conment = editableRef.value.innerText.trim();
     if (conment.length === 0) {
         alert("发送内容不能为空");
         return;
@@ -84,7 +84,9 @@ function handleClick() {
         chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
     })
     socket.emit("send_chat", params);
-    editableRef.value.innerHTML = "";
+    nextTick(() => {
+        editableRef.value.innerText = "";
+    })
 }
 async function addData(params) {
     const { data: resp } = await getChat(params);
@@ -142,8 +144,10 @@ function onMouseMove(e) {
     // 限制在父元素内
     left = Math.max(0, Math.min(left, parentRect.width - sendBtnsRef.value.offsetWidth));
     top = Math.max(0, Math.min(top, parentRect.height - sendBtnsRef.value.offsetHeight));
-    sendBtnsRef.value.style.left = `${left}px`;
-    sendBtnsRef.value.style.top = `${top}px`;
+    nextTick(() => {
+        sendBtnsRef.value.style.left = `${left}px`;
+        sendBtnsRef.value.style.top = `${top}px`;
+    })
 }
 
 function onMouseUp() {

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 10:25:45
+ * @LastEditTime: 2024-10-25 16:03:29
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -31,7 +31,6 @@ function sendNotification(data) {
             title = "申请反馈"
             break;
     }
-    notifyStore.addNotifiy(data);
     const notification = new Notification(title, {
         body: data.conment,
         icon: "../assets/img/info.jpg" // 可选，图标路径
@@ -76,6 +75,7 @@ onMounted(() => {
         }
     };
     socket.on('receive_notify', (data) => {
+        notifyStore.addNotifiy(data);
         if (Notification.permission === "granted") {
             sendNotification(data);
         } else {
