@@ -9,8 +9,6 @@
 import db from "../db/index.js";
 import { httpCode } from "../config/constraint.js";
 export const validateFn = function (req, res, next) {
-  console.log(2222);
-
   const uuid = req.headers.uuid;
   const id = req.id;
   if (uuid && id) {

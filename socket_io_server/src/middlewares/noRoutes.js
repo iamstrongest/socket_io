@@ -14,8 +14,6 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 export const noRoutesFn = function (req, res, next) {
-  console.log(req.url.indexOf("/page") !== -1);
-
   if (
     !routes.some((item) => new RegExp(item).test(req.url)) &&
     req.url.indexOf("/api") !== -1

@@ -21,12 +21,14 @@ app.use(
     },
   })
 );
-app.use(cors());
+// app.use(cors());
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ extended: false }));
 // 静态资源目录
 app.use(express.static("./src/public"));
 app.use(middlewares.cacheFn);
+app.use(middlewares.proxyFn);
 // 解析 POST 提交过来的表单数据
 
 app.use(middlewares.authFn);

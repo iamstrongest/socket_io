@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 17:49:23
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-23 23:49:06
+ * @LastEditTime: 2024-10-25 20:34:55
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\config\constraint.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,6 +19,7 @@ export const httpCode = {
   401: "身份认证过期，请重新登录",
   402: "未携带token,非法请求",
   403: "不存在该路由，你怕是请求了个寂寞",
+  405: "线上环境禁止代理，只能进行原网站访问",
   418: "账号或密码错误",
   419: "用户不存在",
   420: "用户已经注册，请重新选择用户名",

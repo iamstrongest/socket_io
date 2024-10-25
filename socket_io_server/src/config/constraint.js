@@ -11,6 +11,7 @@ export const httpCode = {
   401: "身份认证过期，请重新登录",
   402: "未携带token,非法请求",
   403: "不存在该路由，你怕是请求了个寂寞",
+  405: "线上环境禁止代理，只能进行原网站访问",
   418: "账号或密码错误",
   419: "用户不存在",
   420: "用户已经注册，请重新选择用户名",
@@ -45,6 +46,10 @@ const developmentMessage = `Express server running at http://127.0.0.1:${httpPor
 const previewMessage = `Express server running at http://127.0.0.1:${httpPort}/page/`;
 // 线上环境端口启动的信息
 const productionMessage = `Express server running at ${remoteOrigin}:${httpPort}/page/`;
+// 本地启动允许访问的域名
+const localHosts = [`127.0.0.1:${httpPort}`, `localhost:${httpPort}`];
+// 线上环境允许访问的域名(可以放置被代理)
+const productionHosts = [`121.43.11.11:${httpPort}`];
 export const serverConfig = {
   httpPort: httpPort,
   publicPath:
@@ -63,5 +68,9 @@ export const serverConfig = {
       : process.env.NODE_ENV === "preview"
       ? previewMessage
       : productionMessage,
+  hosts:
+    process.env.NODE_ENV === "devlopment" || process.env.NODE_ENV === "preview"
+      ? localHosts
+      : productionHosts,
 };
 export const secretKey = "strongest ^0^";
