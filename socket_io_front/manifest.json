@@ -1,0 +1,14 @@
+{
+  "name": "来聊吧",
+  "icons": [
+    {
+      "src": "src/assets/img/chat.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "一个基于PWA技术的聊天软件"
+}
