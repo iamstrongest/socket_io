@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 20:46:52
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 13:31:53
+ * @LastEditTime: 2024-10-26 20:27:22
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\friend\FriendList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -19,6 +19,8 @@ const userStore = useUserStore();
 const chatStore = useChatStore();
 const router = useRouter()
 const friendList = ref([]);
+const resizableRef = ref();
+const resizerRef = ref();
 onBeforeMount(async () => {
     const params = { id: userStore.user.info.id };
     const { data: resp } = await getFriend(params);
@@ -38,10 +40,29 @@ function jump(roomId, receiveId) {
     let path = `/chat/chatsingleroom/${roomId}?receiveId=${receiveId}`;
     router.push(path)
 }
+function mousedownHandle(event) {
+    event.preventDefault(); // 防止文本选中
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+}
+function resize(event) {
+    // 计算新的宽度
+    const newWidth = event.clientX - resizableRef.value.getBoundingClientRect().left;
+    // 设置新的宽度
+    if (newWidth > 150 && newWidth < 300) { // 最小宽度限制
+        resizableRef.value.style.width = newWidth + 'px';
+    }
+}
+
+function stopResize() {
+    window.removeEventListener('mousemove', resize);
+    window.removeEventListener('mouseup', stopResize);
+}
 </script>
 <template>
-    <div class="FriendList-container">
+    <div class="FriendList-container" ref="resizableRef">
         <h3>好友列表</h3>
+        <div class="resizer" ref="resizerRef" @mousedown="mousedownHandle"></div>
         <template v-if="friendList.length > 0">
             <div class="frind hover" v-for="(item) of friendList" :key="item.roomId"
                 @click="jump(item.roomId, item.id)">
@@ -58,13 +79,27 @@ function jump(roomId, receiveId) {
 .FriendList-container {
     width: 150px;
     height: 100vh;
-    overflow-y: scroll;
+    position: relative;
+    padding: 1px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .FriendList-container h3 {
     text-align: center;
     height: 40px;
     line-height: 40px;
+}
+
+.resizer {
+    width: 1px;
+    height: 100%;
+    background-color: #ccc;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: ew-resize;
+    /* 水平调整光标 */
 }
 
 .frind {
