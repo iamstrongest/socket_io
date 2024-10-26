@@ -1,12 +1,13 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useNotifyStore } from "@/stores/notify"
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { socket } from "@/utils/socket";
 const router = useRouter();
 const userStore = useUserStore();
 const notifyStore = useNotifyStore()
+const popupRef = ref();
 function handleClicks(params, e) {
     const { route, id } = params;
     e.stopPropagation();
@@ -30,15 +31,15 @@ const icons = [
     },
 ]
 function togglePopup() {
-    const popup = document.querySelector('.more-action');
     nextTick(() => {
-        popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+        if (popupRef.value[0]) {
+            popupRef.value[0].style.display = popupRef.value[0].style.display === 'block' ? 'none' : 'block'
+        }
     })
 }
 
 function selectOption(params) {
     let { route, id } = params;
-    const popup = document.querySelector('.more-action');
     if (id == 8) {
         socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username })
         userStore.resetUserInfo();
@@ -48,16 +49,19 @@ function selectOption(params) {
         route = `${route}?id=${userStore.user.info.id}`;
     }
     nextTick(() => {
-        popup.style.display = 'none'; // 选择后隐藏弹出框
+        if (popupRef.value[0]) {
+            popupRef.value[0].style.display = 'none'; // 选择后隐藏弹出框
+        }
     });
     route && router.push(route);
 }
 
 // 点击弹出框外部时关闭弹出框
 window.onclick = function (event) {
-    const popup = document.querySelector('.more-action');
     nextTick(() => {
-        popup.style.display = 'none';
+        if (popupRef.value[0]) {
+            popupRef.value[0].style.display = 'none';
+        }
     })
 };
 </script>
@@ -69,7 +73,8 @@ window.onclick = function (event) {
             <svg class="icon" aria-hidden="true">
                 <use :xlink:href="item.class"></use>
             </svg>
-            <div v-if="item.id == 4" class="more-action">
+
+            <div v-if="item.id == 4" ref="popupRef" class="more-action">
                 <div class="popup-item hover" v-for="item of icons[3].children" :title="item.title"
                     @click="selectOption(item)">
                     <div class="inner">

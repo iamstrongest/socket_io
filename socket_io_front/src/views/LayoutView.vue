@@ -55,7 +55,6 @@ onMounted(() => {
         notification.onclick = () => {
             window.focus(); // 点击通知时使窗口获得焦点
         };
-        console.log(data.msg);
     });
     socket.on("friend_logout", (data) => {
         const notification = new Notification("好友下线通知", {
@@ -65,7 +64,6 @@ onMounted(() => {
         notification.onclick = () => {
             window.focus(); // 点击通知时使窗口获得焦点
         };
-        console.log(data.msg);
     });
     socket.on("disconnect", () => {
         console.log(socket.connected); // false
