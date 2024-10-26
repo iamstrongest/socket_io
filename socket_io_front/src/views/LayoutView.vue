@@ -46,6 +46,7 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
+
     socket.on("friend_login", (data) => {
         const notification = new Notification("好友上线通知", {
             body: data.msg,

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 16:07:25
+ * @LastEditTime: 2024-10-26 10:42:25
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -18,10 +18,10 @@ const route = useRoute();
 const userStore = useUserStore();
 const chatStore = useChatStore();
 const chatList = ref([]);
-const chatMessageRef = useTemplateRef('chatMessage');
-const editableRef = useTemplateRef('editableDiv');
-const sendContainerRef = useTemplateRef('sendContainer');
-const sendBtnsRef = useTemplateRef('sendBtns');
+const chatMessageRef = ref();
+const editableDivRef = ref();
+const sendContainerRef = ref();
+const sendBtnsRef = ref();
 const page = ref(1);
 const totalPage = ref();
 let offsetX, offsetY;
@@ -32,21 +32,6 @@ const icons = [
     { class: "#icon-gengduox", id: 4, title: "更多" },
 ]
 const isMove = ref(false);
-// watch(() => route.params.roomId, async (newValue, oldValue) => {
-//     console.log(`newValue------>`, newValue);
-//     // console.log(`chatStore.activeRoomId------>`, chatStore.activeRoomId);
-//     // console.log(chatStore.activeRoomId !== newValue);
-//     console.log(oldValue);
-
-//     console.log(newValue.roomId !== oldValue);
-
-//     if (newValue !== oldValue) {
-//         page.value = 1;
-//         const params = { roomId: newValue, page: page.value };
-//         const data = await addData(params);
-//         chatList.value = data;
-//     }
-// })
 watch(() => route.params.roomId, async (newValue, oldValue) => {
     chatList.value = [];
     page.value = 1;
@@ -58,7 +43,7 @@ function handleClick() {
     if (isMove.value) {
         return;
     }
-    const conment = editableRef.value.innerText.trim();
+    const conment = editableDivRef.value.innerText.trim();
     if (conment.length === 0) {
         alert("发送内容不能为空");
         return;
@@ -80,12 +65,10 @@ function handleClick() {
         sendIdUsername,
         sendIdAvatar
     });
-    nextTick(() => {
-        chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
-    })
     socket.emit("send_chat", params);
     nextTick(() => {
-        editableRef.value.innerText = "";
+        editableDivRef.value.innerText = "";
+        chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
     })
 }
 async function addData(params) {
@@ -101,7 +84,7 @@ async function addData(params) {
     return data;
 }
 async function callback(event) {
-    if (event.target.scrollTop < 10) {
+    if (event.target?.scrollTop < 10) {
         const roomId = route.params.roomId;
         const params = { roomId: roomId, page: page.value };
         const data = await addData(params);
@@ -116,37 +99,45 @@ onMounted(async () => {
     const data = await addData(params);
     chatList.value = data;
     socket.on("receive", (data) => {
+        console.log(data);
         chatList.value.push(data);
         chatStore.updateRoomList({ roomId, conment: data.conment });
         nextTick(() => {
-            chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
+            if (chatMessageRef.value) {
+                chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
+            }
         })
     });
     nextTick(() => {
-        chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
+        if (chatMessageRef.value) {
+            chatMessageRef.value.addEventListener("scroll", scrollFn);
+            sendBtnsRef.value.addEventListener("mousedown", onMouseDown);
+            chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
+        }
     })
-    chatMessageRef.value.addEventListener("scroll", scrollFn);
-    sendBtnsRef.value.addEventListener("mousedown", onMouseDown);
+
 })
 function onMouseDown(e) {
     e.preventDefault();
     e.stopPropagation();
-    offsetX = e.clientX - sendBtnsRef.value.getBoundingClientRect().left;
-    offsetY = e.clientY - sendBtnsRef.value.getBoundingClientRect().top;
+    offsetX = e.clientX - sendBtnsRef.value?.getBoundingClientRect().left;
+    offsetY = e.clientY - sendBtnsRef.value?.getBoundingClientRect().top;
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 }
 function onMouseMove(e) {
     isMove.value = true;
-    const parentRect = sendContainerRef.value.getBoundingClientRect();
+    const parentRect = sendContainerRef.value?.getBoundingClientRect();
     let left = e.clientX - offsetX - parentRect.left;
     let top = e.clientY - offsetY - parentRect.top;
     // 限制在父元素内
-    left = Math.max(0, Math.min(left, parentRect.width - sendBtnsRef.value.offsetWidth));
-    top = Math.max(0, Math.min(top, parentRect.height - sendBtnsRef.value.offsetHeight));
+    left = Math.max(0, Math.min(left, parentRect.width - sendBtnsRef.value?.offsetWidth));
+    top = Math.max(0, Math.min(top, parentRect.height - sendBtnsRef.value?.offsetHeight));
     nextTick(() => {
-        sendBtnsRef.value.style.left = `${left}px`;
-        sendBtnsRef.value.style.top = `${top}px`;
+        if (sendBtnsRef.value) {
+            sendBtnsRef.value.style.left = `${left}px`;
+            sendBtnsRef.value.style.top = `${top}px`;
+        }
     })
 }
 
@@ -158,8 +149,8 @@ function onMouseUp() {
     document.removeEventListener('mouseup', onMouseUp);
 }
 onBeforeUnmount(() => {
-    chatMessageRef.value.removeEventListener('scroll', handleClick);
-    sendBtnsRef.value.removeEventListener("mousedown", onMouseDown);
+    chatMessageRef.value?.removeEventListener('scroll', handleClick);
+    sendBtnsRef.value?.removeEventListener("mousedown", onMouseDown);
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
 })
@@ -167,7 +158,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
     <div class="chat-tontainer">
-        <div class="chat-message" ref="chatMessage" v-if="chatList.length > 0">
+        <div class="chat-message" ref="chatMessageRef">
             <template v-for="item of chatList" :key="item.id">
                 <!-- 发送者不是自己 -->
                 <div v-if="item.sendId != userStore.user.info.id" class="left-chat-info">
@@ -191,7 +182,7 @@ onBeforeUnmount(() => {
                 </div>
             </template>
         </div>
-        <div class="send-container" ref="sendContainer">
+        <div class="send-container" ref="sendContainerRef">
             <div class="icons-containers">
                 <div class="icons" v-for="icon in icons" :key="icon.id" title="功能未开发">
                     <svg class="icon" aria-hidden="true">
@@ -199,10 +190,10 @@ onBeforeUnmount(() => {
                     </svg>
                 </div>
             </div>
-            <div class="input-tontainer" contenteditable="true" ref="editableDiv" @keydown.enter="handleClick">
+            <div class="input-tontainer" contenteditable="true" ref="editableDivRef" @keydown.enter="handleClick">
 
             </div>
-            <div class="send-btns .tuozhuai" ref="sendBtns" @click="handleClick" title="可在输入框内拖拽">
+            <div class="send-btns .tuozhuai" ref="sendBtnsRef" @click="handleClick" title="可在输入框内拖拽">
                 <div class="svg">
                     <svg class="icon" aria-hidden="true">
                         <use xlink:href="#icon-fasong"></use>
