@@ -41,9 +41,9 @@ const onSubmit = async () => {
         const { data: resp } = await addFriend(params);
         AddFriendForm.id = '';
         AddFriendForm.conment = '';
-        socket.emit("send_notify", socketData);
         if (resp.code === 200) {
             alert(resp.message)
+            socket.emit("send_notify", socketData);//能够添加后，在发送通知
             // 跳转好友申请列表
             router.push('/chat/request');
         }
