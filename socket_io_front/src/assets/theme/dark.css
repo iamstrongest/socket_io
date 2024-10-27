@@ -8,6 +8,7 @@
     --chat_talk_background_color: #fff;
     --request_card_background_color: #fff;
     --request_card_font_color: #000;
+    --chat_talk_h3_color: #fff;
     --chat_talk_font_color: #000;
     --chat_talk_border_color: #ccc;
     --aside_hover_color: #5E5E5E;
@@ -15,5 +16,5 @@
     --more_background_color: #fff;
     --more_font_color: #000;
     --add_form_background_color: #fff;
-    --add_form_font_color: #000;
+    --add_form_background_color: #fff;
 }

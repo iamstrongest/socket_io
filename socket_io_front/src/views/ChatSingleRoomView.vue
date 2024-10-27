@@ -240,12 +240,6 @@ img {
     border-radius: 50%;
 }
 
-h3 {
-    max-width: 150px;
-    height: 30px;
-    margin-bottom: 5px;
-}
-
 p {
     max-width: 300px;
     border-radius: 5px;
@@ -255,9 +249,13 @@ p {
 }
 
 h3 {
+    max-width: 150px;
+    height: 30px;
+    margin-bottom: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--chat_talk_h3_color);
 }
 
 .right-chat-info {
