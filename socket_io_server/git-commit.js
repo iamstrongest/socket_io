@@ -40,17 +40,17 @@ async function commitToGit() {
     await git.push("origin", "master"); // 假设你的主分支是 `master`
     console.log("更改已推送到远程仓库");
     // 执行 script.js
-    exec("node deploy.js", (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing script: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-    });
+    // exec("node deploy.js", (error, stdout, stderr) => {
+    //   if (error) {
+    //     console.error(`Error executing script: ${error.message}`);
+    //     return;
+    //   }
+    //   if (stderr) {
+    //     console.error(`stderr: ${stderr}`);
+    //     return;
+    //   }
+    //   console.log(`stdout: ${stdout}`);
+    // });
   } catch (error) {
     console.error("错误:", error);
   }

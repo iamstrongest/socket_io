@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-01-06 23:26:44
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 20:20:13
+ * @LastEditTime: 2024-10-27 20:34:33
  * @FilePath: \Front-end\uni-app\uni-project\REMADE.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -163,7 +163,68 @@ npm run deploy //自动部署到你想要防止的目录下
 ```json
  "build": "vite build && node generate-build-info.js && node deploy.js",
 ```
+5. git将代码自动提交,在,socket_io_server根目录的package.json新增指令
+```json
+{
+  "git":"node ./git-commit.js && echo \"node ./git-commit.js successfully\""
+}
 
+```
+socket_io_server根目录下的git-commit.js，
+```js
+import { simpleGit } from "simple-git";
+import path from "path";
+import { fileURLToPath } from "url";
+import { exec } from "child_process";
+import { dirname } from "path";
+// 获取当前目录名
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const git = simpleGit();
+
+async function commitToGit() {
+  try {
+    // 设置你的本地仓库路径
+    const repoPath = path.resolve(__dirname); // 当前目录
+    await git.cwd(repoPath);
+
+    // 检查 Git 仓库状态
+    const status = await git.status();
+    console.log("当前状态:", status);
+    const targetDIrname = path.join(__dirname, "../"); //将前后端2个项目，都进行提交
+    // 添加文件到暂存区
+    await git.add(`${targetDIrname}`); // 添加所有文件
+    console.log("所有文件已添加到暂存区");
+
+    // 提交更改
+    const commitMessage = "feat:文件进行最新上传或者做出修改"; // 你可以自定义提交信息
+    await git.commit(commitMessage);
+    console.log(`已提交更改: ${commitMessage}`);
+
+    // 推送到远程仓库
+    await git.push("origin", "master"); // 假设你的主分支是 `master`
+    console.log("更改已推送到远程仓库");
+    // 执行 script.js
+    // exec("node deploy.js", (error, stdout, stderr) => {
+    //   if (error) {
+    //     console.error(`Error executing script: ${error.message}`);
+    //     return;
+    //   }
+    //   if (stderr) {
+    //     console.error(`stderr: ${stderr}`);
+    //     return;
+    //   }
+    //   console.log(`stdout: ${stdout}`);
+    // });
+  } catch (error) {
+    console.error("错误:", error);
+  }
+}
+commitToGit();
+```
+当前端执行完代码后，就可以执行 npm run git命令，自动提交代码到git上了
+6. 特殊说明，其实可以将第自动化部署放在后端这里处理，把前端的配置放置在后端对应的config目录下，deploy.js脚本防止在socket_io_server根目录下，然后再写指令即可，吧我上面这段打吗注释给取消，就可以实现git提交代码后，自动部署到服务器远程地址。
 ## 疑难解惑
 1. 需要自己手动新建数据库吗？ 不需要，启动命令行就行了，会自动创建表。
 2. 本地预览环境和开发环境共享同一个数据库，没有做区分，所以请求的资源图片会根据端口的不同，会出现加载不出来的问题
