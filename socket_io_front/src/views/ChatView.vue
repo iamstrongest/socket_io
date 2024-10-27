@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:24:16
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-23 09:56:14
+ * @LastEditTime: 2024-10-27 10:58:57
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -33,7 +33,8 @@ const userStore = useUserStore();
 
 .chat-container-right {
     flex: 1;
-    background: url('@/assets/img/chat_background.png') no-repeat;
+    background-repeat: no-repeat;
+    background-image: var(--chat_background_img);
     background-position: bottom;
     background-size: cover;
     box-sizing: border-box;

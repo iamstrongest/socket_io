@@ -2,12 +2,12 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 16:03:29
+ * @LastEditTime: 2024-10-27 12:38:45
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
-import { onBeforeMount, onMounted } from 'vue';
+import { onBeforeMount, onMounted, watch } from 'vue';
 import { useUserStore } from "@/stores/user.js"
 import { useNotifyStore } from "@/stores/notify";
 import { RouterView } from 'vue-router';
@@ -44,9 +44,13 @@ onBeforeMount(async () => {
     await userStore.setUserInfo();
     await notifyStore.setNotifiy();
 })
-
+watch(() => userStore.user.info.theme, (newValue, oldValue) => {
+    if (newValue) {
+        window.document.documentElement.setAttribute('data-theme', newValue);
+    }
+})
 onMounted(() => {
-
+    window.document.documentElement.setAttribute('data-theme', userStore.user.info.theme || 'light')
     socket.on("friend_login", (data) => {
         const notification = new Notification("好友上线通知", {
             body: data.msg,

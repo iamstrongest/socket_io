@@ -14,6 +14,38 @@ export const chatType = {
   4: "视频",
   5: "其它文件",
 };
+export const iconRoutes = [
+  { class: "#icon-tongzhi", route: "/notify", id: 1, title: "系统通知" },
+  { class: "#icon-liaotian", route: "/chat", id: 2, title: "聊天记录" },
+  { class: "#icon-haoyouliebiao", route: "/friend", id: 3, title: "好友列表" },
+  {
+    class: "#icon-gengduox",
+    id: 4,
+    title: "更多",
+    children: [
+      {
+        class: "#icon-tianjiahaoyou",
+        route: "/addfriend",
+        id: 5,
+        title: "添加好友",
+      },
+      {
+        class: "#icon-gerenzhongxin",
+        route: "/user",
+        id: 6,
+        title: "个人信息",
+      },
+      {
+        class: "#icon-bianjixinxi",
+        route: "/edit",
+        id: 7,
+        title: "编辑信息",
+      },
+      { class: "#icon-suoyouren", route: "/alluser", id:8, title: "注册列表" },
+      { class: "#icon-tuichu", id: 9, route: "/login", title: "退出登录" },
+    ],
+  },
+];
 export const httpCode = {
   200: "获取请求成功",
   401: "身份认证过期，请重新登录",

@@ -61,7 +61,7 @@ const onChange = (event) => {
         <form @submit.prevent="onSubmit">
             <div class="form_col file">
                 <label for="file" class="flie_label">
-                    <span>上传文件: </span>
+                    <span>上传图片: </span>
                     <div>
                         <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-shangchuantouxiang"></use>
@@ -96,11 +96,15 @@ const onChange = (event) => {
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
-    background-color: #fff;
+    color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: url('@/assets/img/register.jfif') no-repeat;
+    background-size: cover;
+    background-position: center;
+    /* animation: backgroundChangeForm 6s infinite; */
 }
 
 .form_col {

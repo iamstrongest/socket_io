@@ -1,3 +1,11 @@
+<!--
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-10-24 10:29:18
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-10-27 12:07:37
+ * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\NotifyView.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script setup>
 import { useNotifyStore } from "@/stores/notify";
 import Notify from "@/components/notify/Notify.vue";
@@ -25,6 +33,7 @@ const notifyStore = useNotifyStore();
     box-sizing: border-box;
     width: 100%;
     height: 100vh;
+    color: var(--info_color);
     display: flex;
     align-items: center;
     justify-content: center;

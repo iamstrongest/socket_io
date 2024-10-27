@@ -11,7 +11,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import pinia from "@/stores";
-import "@/assets/css/iconfont";
+import "@/assets/iconfont/iconfont";
 import data from "../public/version.json";
 // import "../service-worker";
 const app = createApp(App);

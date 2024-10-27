@@ -5,7 +5,9 @@ import {
   addFriendService,
   getFriendService,
   getUserDetailService,
-  getAllUserDetailService
+  getAllUserDetailService,
+  updateAvatarService,
+  updateUserinfoService,
 } from "../service/user.js";
 
 export const registController = async function (req, res) {
@@ -50,5 +52,26 @@ export const getUserDetailController = async function (req, res) {
 };
 export const getAllUserDetailController = async function (req, res) {
   const result = await getAllUserDetailService();
+  res.send(result);
+};
+export const updateAvatarController = async function (req, res) {
+  const file = req.files["file"][0];
+  const params = {
+    file,
+    id: req.id,
+    fileName: req.body.fileName,
+    timestamp: req.body.timestamp,
+  };
+  const result = await updateAvatarService(params);
+  res.send(result);
+};
+export const updateUserinfoController = async function (req, res) {
+  const params = {
+    id: req.body.id,
+    username: req.body.username,
+    description: req.body.description,
+    theme: req.body.theme,
+  };
+  const result = await updateUserinfoService(params);
   res.send(result);
 };

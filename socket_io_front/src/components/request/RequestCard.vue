@@ -53,7 +53,7 @@ async function handleClick(status, id, conment) {
                             <use xlink:href="#icon-dengdai"></use>
                         </svg>
                     </div>
-                    <strong class="grey">待验证</strong>
+                    <strong class="wait">待验证</strong>
                 </div>
                 <div class="btns" v-if="props.userType == 2">
                     <button class="button reject" type="button" title="拒绝" @click="handleClick(1, props.id)">拒绝</button>
@@ -89,6 +89,9 @@ async function handleClick(status, id, conment) {
     height: 100px;
     border-radius: 3px;
     border: 1px solid #ccc;
+    background-color: var(--request_card_background_color);
+    color: var(--request_card_font_color);
+    border-color: var(--border__color);
     display: flex;
     align-items: center;
     margin: 50px 0;
@@ -150,16 +153,16 @@ button {
     background-color: #fff;
 }
 
-.grey {
-    color: gray;
+.wait {
+    color: var(--wait_font_color);
 }
 
 .reject {
-    color: red;
+    color: var(--reject_font_color);
 }
 
 .agree {
-    color: #55bfa0;
+    color: var(--confirm_font_color);
 }
 
 .font_icon {

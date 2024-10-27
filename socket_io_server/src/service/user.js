@@ -1,19 +1,3 @@
-/*
- * @Author: strongest-qiang 1309148358@qq.com
- * @Date: 2024-10-20 11:10:42
- * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 00:07:37
- * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\service\user.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
-/*
- * @Author: strongest-qiang 1309148358@qq.com
- * @Date: 2024-10-20 11:10:42
- * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-22 21:47:37
- * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\service\user.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import {
   registFn,
   loginFn,
@@ -22,6 +6,8 @@ import {
   getFriendFn,
   getUserDetailFn,
   getAllUserDetailFn,
+  updateAvatarFn,
+  updateUserinfoFn,
 } from "../dao/user.js";
 import { serverConfig } from "../config/constraint.js";
 import path from "path";
@@ -119,4 +105,49 @@ export const getUserDetailService = async function (req) {
 export const getAllUserDetailService = async function () {
   const result = await getAllUserDetailFn();
   return result;
-}
+};
+/**
+ *
+ * @param {*} params { id:number[查询某个用户详情ID] }
+ * @returns
+ */
+export const updateAvatarService = async function (params) {
+  const file = params.file;
+  const fileName = params.fileName;
+  const dirname = path.join(__dirname, "../public/" + "avatar");
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname);
+  }
+  const filePath = path.join(dirname, fileName + params.timestamp);
+  //给图片设置存放目录  提前给当前文件夹下建立一个images文件夹  ！！！！
+  let tmp = file.path; //获取临时资源文件名，也可以直接赋值给img元素src这个属性
+  let newPath = filePath + "." + file.originalname.split(".")[1];
+  // //  同步执行读取临时生成的buffer文件
+  let fileData = fs.readFileSync(tmp); //将上传到服务器上的临时资源 读取到 一个变量里面
+  // //  同步生成新的文件
+  fs.writeFileSync(newPath, fileData); //重新书写图片文件  写入到指定的文件夹下
+  // //  同步删除临时储存的文件;
+  fs.unlinkSync(tmp);
+  let publicPath =
+    serverConfig.publicPath +
+    "/" +
+    "avatar/" +
+    fileName +
+    params.timestamp +
+    "." +
+    file.originalname.split(".")[1];
+  const req = {};
+  req.id = params.id;
+  req.avatar = publicPath;
+  const result = await updateAvatarFn(req);
+  return result;
+};
+/**
+ *
+ * @param {*} req { username:string[昵称], theme:string[主题], description:string[用户描述], id:number[查询某个用户详情ID] }
+ * @returns
+ */
+export const updateUserinfoService = async function (req) {
+  const result = await updateUserinfoFn(req);
+  return result;
+};

@@ -15,6 +15,7 @@ CREATE TABLE user (
     avatar VARCHAR(255) COMMENT '头像 URL',
     email VARCHAR(255) NOT NULL UNIQUE COMMENT '电子邮件，唯一',
     uuid VARCHAR(255) DEFAULT 'ekskjdomsidc',
+    theme VARCHAR(255) DEFAULT 'light',
     description VARCHAR(255) DEFAULT '该用户很懒，什么都没有留下' COMMENT '用户介绍',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间，默认当前时间',
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间，默认当前时间，更新时自动更新时间'

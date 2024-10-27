@@ -4,10 +4,13 @@ import { useNotifyStore } from "@/stores/notify"
 import { nextTick, ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { socket } from "@/utils/socket";
+import { iconRoutes } from "@/config/constraint"
 const router = useRouter();
 const userStore = useUserStore();
 const notifyStore = useNotifyStore()
 const popupRef = ref();
+const resizableRef = ref();
+const resizerRef = ref();
 function handleClicks(params, e) {
     const { route, id } = params;
     e.stopPropagation();
@@ -17,19 +20,7 @@ function handleClicks(params, e) {
     notifyStore.updateAsideActive(id)
     route && router.push(route);
 }
-const icons = [
-    { class: "#icon-tongzhi", route: "/notify", id: 1, title: "系统通知" },
-    { class: "#icon-liaotian", route: "/chat", id: 2, title: "聊天记录" },
-    { class: "#icon-haoyouliebiao", route: "/friend", id: 3, title: "好友列表" },
-    {
-        class: "#icon-gengduox", id: 4, title: "更多", children: [
-            { class: "#icon-tianjiahaoyou", route: "/addfriend", id: 5, title: "添加好友" },
-            { class: "#icon-gerenzhongxin", route: "/user", id: 6, title: "个人信息" },
-            { class: "#icon-suoyouren", route: "/alluser", id: 7, title: "注册列表" },
-            { class: "#icon-tuichu", id: 8, route: "/login", title: "退出登录" },
-        ]
-    },
-]
+const icons = iconRoutes;
 function togglePopup() {
     nextTick(() => {
         if (popupRef.value[0]) {
@@ -37,10 +28,27 @@ function togglePopup() {
         }
     })
 }
+function mousedownHandle(event) {
+    event.preventDefault(); // 防止文本选中
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+}
+function resize(event) {
+    // 计算新的宽度
+    const newWidth = event.clientX - resizableRef.value.getBoundingClientRect().left;
+    // 设置新的宽度
+    if (newWidth > 50 && newWidth < 100) { // 最小宽度限制
+        resizableRef.value.style.width = newWidth + 'px';
+    }
+}
 
+function stopResize() {
+    window.removeEventListener('mousemove', resize);
+    window.removeEventListener('mouseup', stopResize);
+}
 function selectOption(params) {
     let { route, id } = params;
-    if (id == 8) {
+    if (id == 9) {
         socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username })
         userStore.resetUserInfo();
         localStorage.removeItem('token');
@@ -66,28 +74,32 @@ window.onclick = function (event) {
 };
 </script>
 <template>
-    <aside>
-        <div :class="{ active: notifyStore.asideActive == item.id, popover: item.id == 4 }" class="common hover"
-            v-for="item of icons" :key="item.id"
-            @click="(event) => handleClicks({ route: item.route, id: item.id }, event)" :title="item.title">
-            <svg class="icon" aria-hidden="true">
-                <use :xlink:href="item.class"></use>
-            </svg>
+    <aside ref="resizableRef">
+        <div class="resizer" ref="resizerRef" @mousedown="mousedownHandle"></div>
+        <div>
+            <div class="common hover" v-for="item of icons" :key="item.id"
+                :class="{ active: notifyStore.asideActive == item.id, popover: item.id == 4 }"
+                @click="(event) => handleClicks({ route: item.route, id: item.id }, event)" :title="item.title">
+                <svg class="icon" aria-hidden="true">
+                    <use :xlink:href="item.class"></use>
+                </svg>
 
-            <div v-if="item.id == 4" ref="popupRef" class="more-action">
-                <div class="popup-item hover" v-for="item of icons[3].children" :title="item.title"
-                    @click="selectOption(item)">
-                    <div class="inner">
-                        <div class="more_icon">
-                            <svg class="icon" aria-hidden="true">
-                                <use :xlink:href="item.class"></use>
-                            </svg>
+                <div v-if="item.id == 4" ref="popupRef" class="more-action">
+                    <div class="popup-item hover" v-for="item of icons[3].children" :title="item.title"
+                        @click="selectOption(item)">
+                        <div class="inner">
+                            <div class="more_icon">
+                                <svg class="icon" aria-hidden="true">
+                                    <use :xlink:href="item.class"></use>
+                                </svg>
+                            </div>
+                            <span>{{ item.title }}</span>
                         </div>
-                        <span>{{ item.title }}</span>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="notify" v-if="notifyStore.notify.unreadNum">
             <div class="notify-icon">
                 <svg class="icon" aria-hidden="true">
@@ -104,10 +116,22 @@ aside {
     display: flex;
     position: relative;
     box-sizing: border-box;
+    padding: 1px;
     height: 100vh;
-    background-color: #2e2e2e;
     flex-direction: column;
     align-items: center;
+    z-index: 10;
+}
+
+.resizer {
+    width: 1px;
+    height: 100%;
+    background-color: var(--resizer_background_color);
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: ew-resize;
+    /* 水平调整光标 */
 }
 
 .notify {
@@ -148,12 +172,12 @@ aside div svg use {
     font-size: 40px;
 }
 
-.active {
-    background-color: #c3c4c4;
+aside .active {
+    background-color: var(--aside_active__color);
 }
 
-.hover:hover {
-    background-color: #dedbda;
+aside .hover:hover {
+    background-color: var(--aside_hover_color);
 }
 
 .popover {
@@ -167,8 +191,8 @@ aside div svg use {
     /* 在按钮下面 */
     left: 45px;
     /* 确保左对齐 */
-    background-color: #fff;
     /* 背景颜色 */
+    background-color: var(--more_background_color);
     border: 1px solid #ccc;
     /* 边框 */
     border-radius: 4px;
@@ -179,7 +203,9 @@ aside div svg use {
     /* 确保在其他元素上方 */
     min-width: 150px;
     /* 最小宽度 */
-    height: 150px;
+    height: 180px;
+    color: var(--more_font_color);
+    ;
 }
 
 .popup-item {
@@ -195,7 +221,7 @@ aside div svg use {
 }
 
 .popup-item:hover {
-    background-color: #f0f0f0;
+    background-color: #ccc;
     /* 悬停时的背景颜色 */
 }
 

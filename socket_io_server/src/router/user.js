@@ -11,8 +11,10 @@ import {
   getFriendController,
   getUserDetailController,
   getAllUserDetailController,
+  updateAvatarController,
+  updateUserinfoController,
 } from "../controller/user.js";
-import { registerForm } from "../config/form.js";
+import { registerForm, updateAvatar } from "../config/form.js";
 
 export const registRoute = router.post(
   "/register",
@@ -22,6 +24,15 @@ export const registRoute = router.post(
 export const loginRoute = router.post("/login", loginController);
 export const logoutRoute = router.post("/logout", logoutController);
 export const getUserinfoRoute = router.get("/userinfo", getUserinfoController);
+export const updateUserinfoRoute = router.put(
+  "/userinfo",
+  updateUserinfoController
+);
+export const updateAvatarRoute = router.put(
+  "/avatar",
+  updateAvatar,
+  updateAvatarController
+);
 export const addFriendRoute = router.post("/friend", addFriendController);
 export const deleteFriendRoute = router.delete(
   "/friend",

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-26 10:42:25
+ * @LastEditTime: 2024-10-27 11:50:21
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -211,7 +211,8 @@ onBeforeUnmount(() => {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    border-left: 1px solid #000;
+    color: var(--chat_talk_font_color);
+    /* border-left: 1px solid #000; */
 }
 
 .chat-message {
@@ -249,8 +250,8 @@ p {
     max-width: 300px;
     border-radius: 5px;
     border: 3px solid #fff;
-    background-color: skyblue;
-    color: white;
+    border-color: var(--chat_talk_border_color);
+    background-color: var(--chat_talk_background_color);
 }
 
 h3 {
