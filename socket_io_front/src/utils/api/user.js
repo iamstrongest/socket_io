@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 15:13:08
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-24 10:45:04
+ * @LastEditTime: 2024-10-27 14:04:14
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\utils\api\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,10 +34,30 @@ export function getUserinfo() {
     method,
   });
 }
-
+export function updateUserinfoFn(data) {
+  const method = "put";
+  const url = "/userinfo";
+  return service({
+    url,
+    method,
+    data,
+  });
+}
 export function register(data) {
   const method = "post";
   const url = "/register";
+  return service({
+    url,
+    method,
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+export function updateAvatarFn(data) {
+  const method = "put";
+  const url = "/avatar";
   return service({
     url,
     method,

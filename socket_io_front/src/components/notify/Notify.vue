@@ -1,3 +1,11 @@
+<!--
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-10-24 10:41:25
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-10-27 11:47:57
+ * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\notify\Notify.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script setup>
 import { useNotifyStore } from '@/stores/notify';
 const notifyStore = useNotifyStore();
@@ -35,7 +43,7 @@ async function handleClick(id, status = 1) {
                         <use xlink:href="#icon-chenggong"></use>
                     </svg>
                 </div>
-                <span>已确认</span>
+                <span class="conform">已确认</span>
             </div>
         </div>
     </div>
@@ -47,6 +55,7 @@ async function handleClick(id, status = 1) {
     height: 150px;
     border-radius: 3px;
     border: 1px solid #ccc;
+    border-color: var(--border__color);
     margin: 50px 0;
     display: flex;
     flex-direction: column;
@@ -91,5 +100,8 @@ button {
     border-radius: 4px;
     color: #50b9fe;
     background-color: #fff;
+}
+.conform {
+    color: var(--confirm_font_color);
 }
 </style>

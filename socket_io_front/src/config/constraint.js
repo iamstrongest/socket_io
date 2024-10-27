@@ -14,6 +14,38 @@ export const chatType = {
   4: "视频",
   5: "其它文件",
 };
+export const iconRoutes = [
+  { class: "#icon-tongzhi", route: "/notify", id: 1, title: "系统通知" },
+  { class: "#icon-liaotian", route: "/chat", id: 2, title: "聊天记录" },
+  { class: "#icon-haoyouliebiao", route: "/friend", id: 3, title: "好友列表" },
+  {
+    class: "#icon-gengduox",
+    id: 4,
+    title: "更多",
+    children: [
+      {
+        class: "#icon-tianjiahaoyou",
+        route: "/addfriend",
+        id: 5,
+        title: "添加好友",
+      },
+      {
+        class: "#icon-gerenzhongxin",
+        route: "/user",
+        id: 6,
+        title: "个人信息",
+      },
+      {
+        class: "#icon-bianjixinxi",
+        route: "/edit",
+        id: 7,
+        title: "编辑信息",
+      },
+      { class: "#icon-suoyouren", route: "/alluser", id:8, title: "注册列表" },
+      { class: "#icon-tuichu", id: 9, route: "/login", title: "退出登录" },
+    ],
+  },
+];
 export const httpCode = {
   200: "获取请求成功",
   401: "身份认证过期，请重新登录",
@@ -28,7 +60,7 @@ export const httpCode = {
   423: "添加的好友不存在，请确认查找的账号是否存在",
   424: "插入好友关系申请失败",
   425: "插入好友申请列表失败",
-  426: "等待对方同意或拒绝您的好友申请",
+  426: "申请已提交过了，请处理新的好友页面有无通知",
   427: "当前用户已在别的地方进行了登录，请勿泄露个人信息",
 };
 export const chatListType = {

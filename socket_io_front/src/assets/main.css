@@ -1,5 +1,5 @@
 @import './base.css';
-@import "./css/iconfont.css";
+@import "./iconfont/iconfont.css";
 
 #app {
   width: 100%;

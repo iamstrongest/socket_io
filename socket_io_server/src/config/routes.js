@@ -10,4 +10,5 @@ export default [
   "/api/detail",
   "/api/alluser",
   "/api/register",
+  "/api/avatar",
 ];

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4717351 */
-  src: url('iconfont.woff2?t=1729782332304') format('woff2'),
-       url('iconfont.woff?t=1729782332304') format('woff'),
-       url('iconfont.ttf?t=1729782332304') format('truetype');
+  src: url('iconfont.woff2?t=1730009149337') format('woff2'),
+       url('iconfont.woff?t=1730009149337') format('woff'),
+       url('iconfont.ttf?t=1730009149337') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bianjixinxi:before {
+  content: "\e660";
 }
 
 .icon-suoyouren:before {

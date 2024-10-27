@@ -78,6 +78,14 @@ const router = createRouter({
           component: () => import("@/views/UserView.vue"),
         },
         {
+          path: "edit",
+          name: "edit",
+          meta: {
+            needAuth: true,
+          },
+          component: () => import("@/views/EditUserView.vue"),
+        },
+        {
           path: "alluser",
           name: "all_user",
           meta: {

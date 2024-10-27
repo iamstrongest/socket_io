@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 11:19:08
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 10:05:20
+ * @LastEditTime: 2024-10-27 15:19:42
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_server\src\dao\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -164,36 +164,10 @@ export const addFriendFn = async function (params) {
     };
     return data;
   }
-  // 查看申请列表存不存在添加信息
-  const sqlRequestData = await new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM request where sendId=? and receiveId=? and status=?`;
-    const cases = [sendId, receiveId, 0];
-    db.query(sql, cases, (err, rows) => {
-      if (err) return console.log(err.message);
-      if (rows.length > 0) {
-        resolve({
-          code: 426,
-          message: httpCode[426],
-          data: null,
-          g: Date.now(),
-        });
-      } else {
-        resolve({
-          code: 200,
-          message: "可以添加好友",
-          data: null,
-          g: Date.now(),
-        });
-      }
-    });
-  });
-  if (sqlRequestData.code == 426) {
-    return sqlRequestData;
-  }
   // 查看当前是不是好友关系
   const sqlData = await new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM friend where sendId=? and receiveId=? and status=?`;
-    const cases = [sendId, receiveId, 1];
+    const sql = `SELECT * FROM friend where ((sendId=? and receiveId=?)or(sendId=? and receiveId=?))  and status=?`;
+    const cases = [sendId, receiveId, receiveId, sendId, 2];
     db.query(sql, cases, (err, rows) => {
       if (err) return console.log(err.message);
       if (rows.length > 0) {
@@ -215,6 +189,32 @@ export const addFriendFn = async function (params) {
   });
   if (sqlData.code == 421) {
     return sqlData;
+  }
+  // 查看申请列表存不存在添加信息
+  const sqlRequestData = await new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM request where  ((sendId=? and receiveId=?)or(sendId=? and receiveId=?)) and status=?`;
+    const cases = [sendId, receiveId, receiveId, sendId, 0];
+    db.query(sql, cases, (err, rows) => {
+      if (err) return console.log(err.message);
+      if (rows.length > 0) {
+        resolve({
+          code: 426,
+          message: httpCode[426],
+          data: null,
+          g: Date.now(),
+        });
+      } else {
+        resolve({
+          code: 200,
+          message: "可以添加好友",
+          data: null,
+          g: Date.now(),
+        });
+      }
+    });
+  });
+  if (sqlRequestData.code == 426) {
+    return sqlRequestData;
   }
   const insertRequestSql = `insert into request(sendId, conment, receiveId) VALUES(?,?,?)`;
   const successData = await new Promise((resolve, reject) => {
@@ -344,6 +344,44 @@ export const getAllUserDetailFn = async function () {
   });
   sqlData.data.forEach((user) => {
     delete user.password;
+  });
+  return sqlData;
+};
+export const updateAvatarFn = async function (params) {
+  const { id, avatar } = params;
+  console.log(id, avatar);
+
+  const sql = `update user set avatar=? where id=?`;
+  const sqlData = await new Promise((resolve, reject) => {
+    db.query(sql, [avatar, id], (err, rows) => {
+      if (err) return console.log(err.message);
+      if (rows.affectedRows > 0) {
+        resolve({
+          code: 200,
+          message: "修改头像成功",
+          data: null,
+          g: Date.now(),
+        });
+      }
+    });
+  });
+  return sqlData;
+};
+export const updateUserinfoFn = async function (params) {
+  const { username, theme, description, id } = params;
+  const sql = `update user set username=?, theme=?, description=? where id=?`;
+  const sqlData = await new Promise((resolve, reject) => {
+    db.query(sql, [username, theme, description, id], (err, rows) => {
+      if (err) return console.log(err.message);
+      if (rows.affectedRows > 0) {
+        resolve({
+          code: 200,
+          message: "修改资料成功",
+          data: null,
+          g: Date.now(),
+        });
+      }
+    });
   });
   return sqlData;
 };

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 14:59:09
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-22 21:56:46
+ * @LastEditTime: 2024-10-27 12:48:37
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\form\AddFriend.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -41,9 +41,9 @@ const onSubmit = async () => {
         const { data: resp } = await addFriend(params);
         AddFriendForm.id = '';
         AddFriendForm.conment = '';
-        socket.emit("send_notify", socketData);
         if (resp.code === 200) {
             alert(resp.message)
+            socket.emit("send_notify", socketData);//能够添加后，在发送通知
             // 跳转好友申请列表
             router.push('/chat/request');
         }
@@ -79,7 +79,8 @@ const onSubmit = async () => {
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: var(--add_form_background_color);
+    color: var(--add_form_font_color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -115,5 +116,7 @@ textarea {
     width: 200px;
     height: 100px;
     border-radius: 3px;
+    resize: none;
+    /* 禁止大小调整 */
 }
 </style>

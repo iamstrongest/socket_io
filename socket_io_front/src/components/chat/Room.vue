@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 10:51:22
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 13:23:49
+ * @LastEditTime: 2024-10-27 11:58:56
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\chat\ChatList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,6 +16,8 @@ import { useChatStore } from '@/stores/chat'
 const router = useRouter()
 const userStore = useUserStore()
 const chatStore = useChatStore();
+const resizableRef = ref();
+const resizerRef = ref();
 onBeforeMount(async () => {
     const params = { id: userStore.user.info.id };
     await chatStore.getRoomDataList(params);
@@ -36,10 +38,29 @@ function jump(type, id, roomId, receiveId) {
     router.push(path)
     // window.location.href = path;
 }
+function mousedownHandle(event) {
+    event.preventDefault(); // 防止文本选中
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+}
+function resize(event) {
+    // 计算新的宽度
+    const newWidth = event.clientX - resizableRef.value.getBoundingClientRect().left;
+    // 设置新的宽度
+    if (newWidth > 150 && newWidth < 300) { // 最小宽度限制
+        resizableRef.value.style.width = newWidth + 'px';
+    }
+}
+
+function stopResize() {
+    window.removeEventListener('mousemove', resize);
+    window.removeEventListener('mouseup', stopResize);
+}
 </script>
 <template>
-    <div class="chatList-container ">
+    <div class="chatList-container" ref="resizableRef">
         <h3>聊天记录</h3>
+        <div class="resizer" ref="resizerRef" @mousedown="mousedownHandle"></div>
         <div class="new-friends hover" @click="jump(-1, -1)" :class="{ active: chatStore.chatActive == -1 }">
             <i><svg class="icon" aria-hidden="true">
                     <use xlink:href="#icon-xindehaoyou"></use>
@@ -64,7 +85,21 @@ function jump(type, id, roomId, receiveId) {
 .chatList-container {
     width: 150px;
     height: 100vh;
-    overflow-y: scroll;
+    padding: 1px;
+    position: relative;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.resizer {
+    width: 1px;
+    height: 100%;
+    background-color: var(--resizer_background_color);
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: ew-resize;
+    /* 水平调整光标 */
 }
 
 .chatList-container h3 {

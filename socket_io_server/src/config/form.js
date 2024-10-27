@@ -22,4 +22,9 @@ export const registerForm = upload.fields([
     { name: "email" },
     { name: "password" },
     { name: "username" },
-  ])
+])
+export const updateAvatar = upload.fields([
+  { name: "file" },
+  { name: "timestamp" },
+  { name: "fileName" },
+])
