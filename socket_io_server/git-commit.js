@@ -9,6 +9,7 @@
 import { simpleGit } from "simple-git";
 import path from "path";
 import { fileURLToPath } from "url";
+import { exec } from "child_process";
 import { dirname } from "path";
 // 获取当前目录名
 const __filename = fileURLToPath(import.meta.url);
@@ -38,8 +39,6 @@ async function commitToGit() {
     // 推送到远程仓库
     await git.push("origin", "master"); // 假设你的主分支是 `master`
     console.log("更改已推送到远程仓库");
-    const { exec } = require("child_process");
-
     // 执行 script.js
     exec("node deploy.js", (error, stdout, stderr) => {
       if (error) {
