@@ -8,7 +8,11 @@
  */
 import { sourceTypeList, expiryType } from "../config/cacheSources.js";
 export const cacheFn = function (req, res, next) {
-  if (sourceTypeList.some((item) => new RegExp(item).test(req.url))) {
+  if (
+    sourceTypeList.some((item) => new RegExp(item).test(req.url)) &&
+    !req.url.indexOf("version.json")
+  ) {
+    //注意不能缓存version.json文件
     Object.entries(expiryType).forEach((item) => {
       res.set(item[0], item[1]);
     });

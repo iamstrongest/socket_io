@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-01-06 23:26:44
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 17:15:29
+ * @LastEditTime: 2024-10-27 20:20:13
  * @FilePath: \Front-end\uni-app\uni-project\REMADE.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -97,8 +97,73 @@ npm run start:pm2
 1. 浏览器地址栏会出现安装的标志，允许安装即可
 2. 要使 Web 应用程序可安装，它必须在安全上下文中提供。通常意味着它必须通过 HTTPS 提供。本地资源，如 localhost、127.0.0.1 和 file:// 也被视为安全。
 3. 暂时不引用service-worker技术
-## 自动化部署
-暂时不做更新了
+## 远程服务器自动化部署，以及代码自动上传git
+1. 编写配置文件 socket_io_front项目中的 config目录的deplop.js,是远程项目的配置
+```js
+export const deployConfig = {
+  host: "121.13.18.28",//远程服务器的ip地址,请用自己的(上面的ip地址是乱写的)
+  username: "root",//远程服务器的连接用户，请用自己的(上面的username是乱写的)
+  password: "SD123dsx.",//远程服务器的密码，请用自己的(上面的username是乱写的)
+};
+```
+2. 编写node-ssh脚本，在socket_io_front项目的根目录下
+```js
+import { NodeSSH } from "node-ssh";
+import { deployConfig } from "./src/config/deploy.js";
+import path from "path";
+async function deploy() {
+  const ssh = new NodeSSH();
+  await ssh.connect(deployConfig);//连接的配置
+  const localDir = path.resolve(".", "../socket_io_server/src/public/page/"); // 要自动化部署的前端目录
+  const remoteDir = "/usr/local/socket_io/socket_io_server/src/public/page/"; // 远程服务器目标目录
+  // 指定要排除的文件或目录
+  const excludeFiles = ['node_modules']; // 不需要上传的目录，可以根据需要修改,比如说node_modules
+  // 检查目标目录是否存在，并在存在时删除
+  try {
+    const result = await ssh.execCommand(
+      `if [ -d ${remoteDir} ]; then rm -rf ${remoteDir}; fi`
+    );//如果远程服务器已经有了这个目录，就删除
+    console.log(result.stdout); // 输出删除结果
+    console.error(result.stderr); // 输出错误信息（如果有）
+  } catch (error) {
+    console.error(`Error while checking/deleting directory: ${error.message}`);
+  }
+  // 开始上传
+  const result = await ssh.putDirectory(localDir, remoteDir, {
+    recursive: true,
+    // 定义文件过滤回调函数
+    fileCallback: (itemPath) => {
+      console.log(`itemPath--->`, itemPath);
+
+      // 判断当前文件是否在排除列表中
+      const itemName = path.basename(itemPath);
+      const shouldInclude = !excludeFiles.includes(itemName);
+      console.log(`Should include ${itemName}: ${shouldInclude}`);
+      return shouldInclude;
+    },
+  });
+
+  console.log(`Upload result: ${result ? "Success" : "Failed"}`);
+
+  ssh.dispose();
+}
+
+deploy().catch((err) => {
+  console.error(`Deployment error: ${err.message}`);
+});
+
+```
+3. 执行完 npm run build后，再执行npm run deploy
+```sh
+npm run build //打包
+npm run deploy //自动部署到你想要防止的目录下
+```
+4. 特殊说明，npm run build 和 npm run deploy其实可以放在一起使用，会先执行npm run build 再执行 npm run deploy
+再package.json中，修改命令
+```json
+ "build": "vite build && node generate-build-info.js && node deploy.js",
+```
+
 ## 疑难解惑
 1. 需要自己手动新建数据库吗？ 不需要，启动命令行就行了，会自动创建表。
 2. 本地预览环境和开发环境共享同一个数据库，没有做区分，所以请求的资源图片会根据端口的不同，会出现加载不出来的问题
@@ -107,6 +172,12 @@ npm run start:pm2
 5. 为什么线上环境，不需要配置特定的ip地址？ 默认请求当前所部署服务器的根路径，若服务器端口在3000，则部署后就请求3000的端口。
 6. 前端打包文件在哪里？ 更改了配置，打包在socket_io_server项目的public目录下的page目录中
 7. 为什么有时候发送聊天信息，对方没有接收到？(可能是ChatSingleRoomView.vue组件中，dom监听滑动事件，导致错误，没有执行到io.on('recelive'),就被迫终止了，因此自己没有将新数据添加到数据项中)
-
+8. 是否需要重新启动服务器？ 没有修改后端的配置，是不需要重新启动的，服务器会自动判断当前资源有误做修改
+9. 自动化部署上传文件到远程服务器，慢是正常的，请不要终止
+10. 自动化上传文件到git，首先需要你将这个项目于git关联了，如果没有关联，需要你手动进行关联
+``` sh
+git init
+git remote add origin https://github.com/dsdjkjas/socket.io.git
+```
 
 

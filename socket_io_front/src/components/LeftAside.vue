@@ -207,7 +207,14 @@ aside .hover:hover {
     color: var(--more_font_color);
     ;
 }
-
+.more-action::before{
+    position: absolute;
+    content:"";
+    top: 50%;
+    left: -20px;
+    border:10px solid transparent;
+    border-right-color: aqua;
+}
 .popup-item {
     height: 30px;
     width: 150px;

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 11:50:21
+ * @LastEditTime: 2024-10-27 19:25:43
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -278,7 +278,8 @@ h3 {
     flex: 1;
     position: relative;
     border-top: 2px solid #ccc;
-    background-color: #fff;
+    color: var(--send——container_font_color);
+    background-color: var(--send——container_background_color);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
