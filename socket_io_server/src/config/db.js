@@ -8,7 +8,7 @@
  */
 export const dbConfig = {
   root: "root", //用户名
-  password: "909832", //密码
+  password: "123456", //密码
   scheam: "im_chat", //数据库名称
   host: "localhost", //数据库IP地址
 };
