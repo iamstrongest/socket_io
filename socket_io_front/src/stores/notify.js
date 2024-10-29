@@ -9,7 +9,7 @@
 import { reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { getNotifiy, confirmNotifiy } from "@/utils/api/notify";
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 import { useUserStore } from "@/stores/user.js";
 export const useNotifyStore = defineStore("notify", () => {
   const asideActive = ref(1);

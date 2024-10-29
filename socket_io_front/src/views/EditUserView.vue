@@ -153,7 +153,7 @@ async function submitHandle() {
 form {
     margin-top: 10px;
     width: 300px;
-    height: 200px;
+    height: 300px;
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
@@ -168,7 +168,15 @@ form {
     display: flex;
     flex-direction: column;
 }
-
+.form_col input[type="text"] {
+    height:40px;
+}
+.form_col label{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .upload {
     display: flex;
     justify-content: center;

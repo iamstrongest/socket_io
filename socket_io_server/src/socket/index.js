@@ -1,24 +1,27 @@
 import { Server } from "socket.io";
-import {serverConfig} from "../../config/constraint.js";
+import { serverConfig } from "../config/constraint.js";
 // highlight-start
-console.log(serverConfig.socketOrigin);
 const options = {
   cors: {
     origin: serverConfig.socketOrigin,
     credentials: true,
   },
 };
-import db from "../../db/index.js";
+import db from "../db/index.js";
 export function ioInit(httpServer) {
   let io = new Server(httpServer, options);
-  // console.log(io.sockets.adapter.rooms);// 获取所有房间
-  // console.log(io.sockets.adapter.rooms.get(roomId));// 获取某个特定的房间
   io.on("connection", (socket) => {
+    // console.log(socket.id);// 获取当前socket本身给定的id
+    // console.log(io.sockets.adapter.rooms);// 获取所有房间
+    // console.log(socket.handshake.query.username); //拼接在连接url后面的参数
+    // console.log(io.sockets.adapter.rooms.get(roomId));// 获取某个特定的房间
+    // io.sockets.adapter.rooms.delete(id); // 删除某个房间
+    // socket.leave(id); // 将某个房间的特定的连接的websocket对象断开，和上面一样的
     //  用户登录后，就创建消息队列房间
     socket.on("login", async (data) => {
       // 一个用户ID,对应一条持久化在线提示
       const { id } = data;
-      socket.join(id);
+      socket.join(id); //自己新创建一个房间，否者使用原先给定的，一旦前端刷新，房间就会被销毁
       // 查找登录者
       const user = await new Promise((resolve, reject) => {
         const sql = `SELECT * FROM user where id=?`;
@@ -240,10 +243,6 @@ export function ioInit(httpServer) {
       }
       socket.leave(id); // 将某个房间的特定的连接的websocket对象断开
     });
-    // if (io.sockets.adapter.rooms.get(id) === undefined) {
-    //     //当房间内部的set集合为0时，结果会为undefined
-    //     io.sockets.adapter.rooms.delete(id); // 删除某个房间
-    // }
     socket.on("disconnect", () => {
       console.log(`socket:${socket.id} -- client disconnected`);
       // 处理客户端断开连接后的逻辑

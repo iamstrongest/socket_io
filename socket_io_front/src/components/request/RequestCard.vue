@@ -1,7 +1,7 @@
 <script setup>
 import { handleFriendRequestList } from "@/utils/api/request"
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 const userStore = useUserStore();
 const props = defineProps({
     avatar: {

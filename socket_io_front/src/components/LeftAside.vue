@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { useNotifyStore } from "@/stores/notify"
 import { nextTick, ref } from "vue";
 import { useUserStore } from "@/stores/user";
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 import { iconRoutes } from "@/config/constraint"
 const router = useRouter();
 const userStore = useUserStore();
@@ -207,14 +207,16 @@ aside .hover:hover {
     color: var(--more_font_color);
     ;
 }
-.more-action::before{
+
+.more-action::before {
     position: absolute;
-    content:"";
+    content: "";
     top: 50%;
     left: -20px;
-    border:10px solid transparent;
+    border: 10px solid transparent;
     border-right-color: aqua;
 }
+
 .popup-item {
     height: 30px;
     width: 150px;

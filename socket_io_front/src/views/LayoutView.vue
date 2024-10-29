@@ -12,7 +12,7 @@ import { useUserStore } from "@/stores/user.js"
 import { useNotifyStore } from "@/stores/notify";
 import { RouterView } from 'vue-router';
 import LeftAside from "@/components/LeftAside.vue"
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 import { requestPermission } from "@/utils/notification"
 const notifyStore = useNotifyStore();
 const userStore = useUserStore();
@@ -44,7 +44,7 @@ onBeforeMount(async () => {
     await userStore.setUserInfo();
     await notifyStore.setNotifiy();
 })
-watch(() => userStore.user.info.theme, (newValue, oldValue) => {
+watch(() => userStore.user?.info?.theme, (newValue, oldValue) => {
     if (newValue) {
         window.document.documentElement.setAttribute('data-theme', newValue);
     }

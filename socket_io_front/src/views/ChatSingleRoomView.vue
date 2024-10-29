@@ -11,7 +11,7 @@ import { onMounted, ref, computed, useTemplateRef, nextTick, onBeforeUnmount, wa
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { getChat } from "@/utils/api/chat"
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 import { throttle } from "@/utils/utilFn"
 import { useChatStore } from '@/stores/chat'
 const route = useRoute();

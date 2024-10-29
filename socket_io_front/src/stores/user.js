@@ -9,7 +9,7 @@
 import { reactive, computed } from "vue";
 import { defineStore } from "pinia";
 import { getUserinfo } from "@/utils/api/user";
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 export const useUserStore = defineStore("userinfo", () => {
   const user = reactive({
     info: {},

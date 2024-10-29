@@ -11,7 +11,7 @@ import { reactive, computed, onMounted } from 'vue'
 import { addFriend } from "@/utils/api/user"
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/utils/socket";
+import { socket } from "@/socket";
 const userStore = useUserStore();
 const username = computed(() => userStore.user.info.username);
 const AddFriendForm = reactive({
@@ -72,7 +72,7 @@ const onSubmit = async () => {
         </form>
     </div>
 </template>
-<style>
+<style scoped>
 .form_container {
     width: 300px;
     min-height: 200px;
