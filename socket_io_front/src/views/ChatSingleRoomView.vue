@@ -2,12 +2,12 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 19:25:43
+ * @LastEditTime: 2024-11-01 09:33:33
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
-import { onMounted, ref, computed, useTemplateRef, nextTick, onBeforeUnmount, watch } from 'vue';
+import { onMounted, ref, computed, useTemplateRef, nextTick, onBeforeUnmount, watch, provide } from 'vue';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { getChat } from "@/utils/api/chat"
 import { useUserStore } from '@/stores/user';
@@ -24,6 +24,13 @@ const sendContainerRef = ref();
 const sendBtnsRef = ref();
 const page = ref(1);
 const totalPage = ref();
+provide('scrollFn', () => {
+    nextTick(() => {
+        if (chatMessageRef.value) {
+            chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
+        }
+    })
+})
 let offsetX, offsetY;
 const icons = [
     { class: "#icon-biaoqing", id: 1, title: "表情包" },
@@ -33,11 +40,12 @@ const icons = [
 ]
 const isMove = ref(false);
 watch(() => route.params.roomId, async (newValue, oldValue) => {
-    chatList.value = [];
+    chatStore.resetChatList();
+    chatStore.updateActiveRoomId(newValue);
     page.value = 1;
     const params = { roomId: newValue, page: page.value };
     const data = await addData(params);
-    chatList.value = data;
+    chatStore.addAfterChat(data);
 })
 function handleClick() {
     if (isMove.value) {
@@ -50,13 +58,14 @@ function handleClick() {
     }
     const roomId = route.params.roomId;
     const sendId = userStore.user.info.id;
-    chatStore.updateRoomList({ roomId, conment });
+    const date = new Date();
+    chatStore.updateRoomList({ roomId, conment, createdAt: date });
     const receiveId = parseInt(route.query.receiveId);
     const type = 1;
-    const params = { roomId, sendId, conment, receiveId, type };
+    const params = { roomId, sendId, conment, receiveId, type, createdAt: date };
     const sendIdUsername = userStore.user.info.username;
     const sendIdAvatar = userStore.user.info.avatar;
-    chatList.value.push({
+    chatStore.addAfterChat({
         conment,
         roomId,
         sendId,
@@ -65,7 +74,7 @@ function handleClick() {
         sendIdUsername,
         sendIdAvatar
     });
-    socket.emit("send_chat", params);
+    socket.emit("send_single_chat", params);
     nextTick(() => {
         editableDivRef.value.innerText = "";
         chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
@@ -88,26 +97,18 @@ async function callback(event) {
         const roomId = route.params.roomId;
         const params = { roomId: roomId, page: page.value };
         const data = await addData(params);
-        chatList.value.unshift(...data);
+        chatStore.addBeforeChat(data);
     }
 }
 const scrollFn = throttle(callback, 500);
 
 onMounted(async () => {
     const roomId = route.params.roomId;
+    chatStore.updateActiveRoomId(roomId);
     const params = { roomId: roomId, page: page.value };
     const data = await addData(params);
     chatList.value = data;
-    socket.on("receive", (data) => {
-        console.log(data);
-        chatList.value.push(data);
-        chatStore.updateRoomList({ roomId, conment: data.conment });
-        nextTick(() => {
-            if (chatMessageRef.value) {
-                chatMessageRef.value.scrollTop = chatMessageRef.value.scrollHeight;
-            }
-        })
-    });
+    chatStore.addAfterChat(data);
     nextTick(() => {
         if (chatMessageRef.value) {
             chatMessageRef.value.addEventListener("scroll", scrollFn);
@@ -159,7 +160,7 @@ onBeforeUnmount(() => {
 <template>
     <div class="chat-tontainer">
         <div class="chat-message" ref="chatMessageRef">
-            <template v-for="item of chatList" :key="item.id">
+            <template v-for="item of chatStore.chatList" :key="item.roomId">
                 <!-- 发送者不是自己 -->
                 <div v-if="item.sendId != userStore.user.info.id" class="left-chat-info">
                     <div>

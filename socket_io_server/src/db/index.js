@@ -13,6 +13,12 @@ import { createChatTable } from "./model/chat.js";
 import { createRequestTable } from "./model/request.js";
 import { createFriendTable } from "./model/friend.js";
 import { createNotificationTable } from "./model/notification.js";
+import {
+  createGroupRoomTable,
+  createGroupRoomUserTable,
+  createGroupChatTable,
+  createGRoupRequestTable,
+} from "./model/group_chat.js";
 // 创建数据库连接
 const db = mysql.createConnection({
   host: dbConfig.host,
@@ -69,6 +75,14 @@ function initializeDatabase() {
         createFriendTable(db, callback);
         // 创建通知信息表
         createNotificationTable(db, callback);
+        // 创建房间表
+        createGroupRoomTable(db, callback);
+        // 创建房间用户表
+        createGroupRoomUserTable(db, callback);
+        // 创建群聊天记录表
+        createGroupChatTable(db, callback);
+        // 创建群聊申请表
+        createGRoupRequestTable(db, callback);
       });
     }
   );

@@ -25,3 +25,12 @@ export function handleFriendRequestList(data) {
     data,
   });
 }
+export function getGroupRequestList(params) {
+  const method = "get";
+  const url = "/grouprequest";
+  return service({
+    url,
+    method,
+    params,
+  });
+}

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-26 08:46:03
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-29 09:52:56
+ * @LastEditTime: 2024-11-02 18:10:06
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,24 +11,18 @@ import express from "express";
 // 创建 express 的服务器实例
 const app = express();
 import http from "http";
+import https from "https";
 import { serverConfig } from "./src/config/constraint.js";
 // TODO_01：请配置 Session 中间件
-import session from "express-session";
 import cors from "cors";
 import "./src/db/index.js";
 import routes from "./src/router/index.js";
 import middlewares from "./src/middlewares/index.js";
 import { ioInit } from "./src/socket//index.js";
-app.use(
-  session({
-    secret: "strongest", //加密钥匙
-    resave: true, //每次生成session，自动会记录时间
-    saveUninitialized: true, //进入就会生成一个无效的cookie，只有完成验证后，才会生成有效的cookie值
-    cookie: {
-      maxAge: 1000 * 60 * 60, //60分钟过期
-    },
-  })
-);
+import { credentials } from "./src/config/ssl/index.js";
+import cluster from "node:cluster";
+import { availableParallelism } from "node:os";
+import process from "node:process";
 // app.use(cors());
 
 app.use(express.urlencoded({ extended: false }));
@@ -44,9 +38,40 @@ app.use(middlewares.validateFn);
 app.use(middlewares.noRoutesFn);
 app.use(routes);
 app.use(middlewares.serverErrorFn);
-// 调用 app.listen 方法，指定端口号并启动web服务器
-const server = http.createServer(app);
-ioInit(server);
-server.listen(serverConfig.httpPort, function () {
-  console.log(serverConfig.message);
-});
+// 根据不同的环境指令，启动服务器
+function initServer() {
+  const httpArr = ["http_devlopment", "http_preview", "http_production"];
+  const httpSArr = ["https_devlopment", "https_preview", "https_production"];
+  if (httpArr.some((item) => item === process.env.NODE_ENV)) {
+    const http_Server = http.createServer(app);
+    ioInit(http_Server);
+    http_Server.listen(serverConfig.httpPort, function () {
+      console.log(serverConfig.message);
+    });
+  } else if (httpSArr.some((item) => item === process.env.NODE_ENV)) {
+    const https_Server = https.createServer(credentials, app);
+    ioInit(https_Server);
+    https_Server.listen(serverConfig.httpPort, function () {
+      console.log(serverConfig.message);
+    });
+  } else {
+    console.log("启动指令未找到");
+  }
+  // // 获取CPU核数
+  // const numCPUs = availableParallelism();
+  // // 开启多进程
+  // if (cluster.isPrimary) {
+  //   console.log(`Primary ${process.pid} is running`);
+  //   // Fork workers.
+  //   for (let i = 0; i < numCPUs; i++) {
+  //     cluster.fork();
+  //   }
+
+  //   cluster.on("exit", (worker, code, signal) => {
+  //     console.log(`worker ${worker.process.pid} died`);
+  //   });
+  // } else {
+  //   console.log(`Worker ${process.pid} started`);
+  // }
+}
+initServer();

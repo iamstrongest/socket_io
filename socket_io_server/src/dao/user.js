@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 11:19:08
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 15:19:42
+ * @LastEditTime: 2024-11-02 12:10:34
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_server\src\dao\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -74,6 +74,7 @@ export const loginFn = async function (params) {
             message: "登录成功",
             data: {
               token: jwt.createToken(tokenParams),
+              refresh_token: jwt.createFreshToken(tokenParams),
             },
             g: Date.now(),
           });
@@ -239,7 +240,20 @@ export const addFriendFn = async function (params) {
   });
   return successData;
 };
-
+// token校验本地是否过期
+export const refreshFn = async function (params) {
+  const decode = { id: params.id, email: params.email };
+  const token = jwt.createToken(decode);
+  const refresh_token = jwt.createFreshToken(decode);
+  const result = {
+    code: 200,
+    token,
+    refresh_token,
+    data: null,
+    message: "刷新token验证成功",
+  };
+  return result;
+};
 export const getFriendFn = async function (params) {
   const { id } = params;
   const sql = `SELECT * FROM friend where sendId=? and status=?`;

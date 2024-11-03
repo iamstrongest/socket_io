@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10056821",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "6134650",
+      "name": "新邀请会员",
+      "font_class": "xinyaoqinghuiyuan",
+      "unicode": "e6ca",
+      "unicode_decimal": 59082
+    },
+    {
+      "icon_id": "26922919",
+      "name": "删除用户",
+      "font_class": "shanchuyonghu",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "33371537",
+      "name": "查找用户",
+      "font_class": "chazhaoyonghu",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "41606918",
+      "name": "创建群聊",
+      "font_class": "a-O1CN017YTIJ61aWqxtK9bAy_6000000003338-55-tps-200",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
       "icon_id": "9468171",
       "name": "编辑信息",
       "font_class": "bianjixinxi",

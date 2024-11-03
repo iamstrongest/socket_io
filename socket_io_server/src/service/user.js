@@ -1,6 +1,7 @@
 import {
   registFn,
   loginFn,
+  refreshFn,
   getUserFn,
   addFriendFn,
   getFriendFn,
@@ -57,11 +58,20 @@ export const registService = async function (params) {
 };
 /**
  *
- * @param {*} req {email:string[登陆者邮箱] , password:string[登陆者密码]}
+ * @param {*} req {email:string[登录者邮箱] , password:string[登录者密码]}
  * @returns
  */
 export const loginService = async function (req) {
   const result = await loginFn(req);
+  return result;
+};
+/**
+ *
+ * @param {*} req {email:string[登录者邮箱] , id:number[登录者Id]}
+ * @returns
+ */
+export const refreshService = async function (req) {
+  const result = await refreshFn(req);
   return result;
 };
 export const logoutService = async function (req) {};

@@ -10,6 +10,7 @@
 import { reactive } from 'vue'
 import { login } from "@/utils/api/user"
 import { useRouter } from 'vue-router';
+import { storageFn } from "@/utils/api/index"
 const registerForm = reactive({
     password: "",
     email: "",
@@ -25,7 +26,7 @@ const onSubmit = async () => {
         if (resp.code === 200) {
             const flag = confirm(resp.message);
             if (flag) {
-                localStorage.setItem('token', data.token);
+                storageFn(data.token, data.refresh_token);
                 router.push('/');
             }
         }

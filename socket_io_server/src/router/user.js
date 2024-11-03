@@ -13,6 +13,7 @@ import {
   getAllUserDetailController,
   updateAvatarController,
   updateUserinfoController,
+  refreshController
 } from "../controller/user.js";
 import { registerForm, updateAvatar } from "../config/form.js";
 
@@ -22,6 +23,7 @@ export const registRoute = router.post(
   registController
 );
 export const loginRoute = router.post("/login", loginController);
+export const refreshRoute = router.get("/refresh", refreshController);
 export const logoutRoute = router.post("/logout", logoutController);
 export const getUserinfoRoute = router.get("/userinfo", getUserinfoController);
 export const updateUserinfoRoute = router.put(

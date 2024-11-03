@@ -1,3 +1,11 @@
+<!--
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-10-24 22:48:33
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-10-30 14:23:54
+ * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\AllUserView.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script setup>
 import { onBeforeMount, ref } from 'vue';
 import { getAllUserDetailFn } from "@/utils/api/user";
@@ -32,14 +40,14 @@ onBeforeMount(async () => {
 <style scoped>
 .all-user-container {
     width: 100%;
-    height: 100vh;
+    height: 95vh;
     display: flex;
+    box-sizing: border-box;
     flex-direction: column;
     align-items: center;
     overflow-y: scroll;
+    padding-top: 20px;
 }
-
-
 img {
     width: 50px;
     height: 50px;

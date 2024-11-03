@@ -22,8 +22,8 @@ CREATE TABLE friend (
 export function createFriendTable(db, callback) {
   db.query(createFriendTableSql, (err, results) => {
     if (err) {
-      return callback("创建 Friends 表失败:" + err);
+      return callback("创建 friend 表失败:" + err);
     }
-    callback(null, "Friend 表创建成功或已存在");
+    callback(null, "friend 表创建成功或已存在");
   });
 }

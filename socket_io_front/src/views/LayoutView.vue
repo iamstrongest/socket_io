@@ -2,20 +2,22 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 12:38:45
+ * @LastEditTime: 2024-11-01 00:14:38
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
-import { onBeforeMount, onMounted, watch } from 'vue';
+import { onBeforeMount, onMounted, watch, onUnmounted, inject } from 'vue';
 import { useUserStore } from "@/stores/user.js"
 import { useNotifyStore } from "@/stores/notify";
 import { RouterView } from 'vue-router';
 import LeftAside from "@/components/LeftAside.vue"
 import { socket } from "@/socket";
 import { requestPermission } from "@/utils/notification"
+import Footer from "@/components/Footer.vue"
 const notifyStore = useNotifyStore();
 const userStore = useUserStore();
+// const scrollFn = inject('scrollFn');
 // 请求权限
 // 发送通知
 function sendNotification(data) {
@@ -51,6 +53,7 @@ watch(() => userStore.user?.info?.theme, (newValue, oldValue) => {
 })
 onMounted(() => {
     window.document.documentElement.setAttribute('data-theme', userStore.user.info.theme || 'light')
+
     socket.on("friend_login", (data) => {
         const notification = new Notification("好友上线通知", {
             body: data.msg,
@@ -87,6 +90,9 @@ onMounted(() => {
         // tonePlayerRef.value.playTone()
     })
 });
+onUnmounted(() => {
+    userStore.resetUserInfo();
+})
 </script>
 <template>
     <main v-if="userStore?.user?.info?.id">
@@ -95,6 +101,7 @@ onMounted(() => {
             <RouterView></RouterView>
         </div>
     </main>
+    <Footer></Footer>
 </template>
 
 <style scoped>

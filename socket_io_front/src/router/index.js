@@ -1,3 +1,11 @@
+/*
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-10-20 10:40:30
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-11-02 14:21:28
+ * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\router\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { createRouter, createWebHistory } from "vue-router";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +33,7 @@ const router = createRouter({
               meta: {
                 needAuth: true,
               },
-              component: () => import("@/views/FriendRequestListView.vue"),
+              component: () => import("@/views/RequestListView.vue"),
             },
             {
               path: "chatsingleroom/:roomId",
@@ -36,7 +44,7 @@ const router = createRouter({
               component: () => import("@/views/ChatSingleRoomView.vue"),
             },
             {
-              path: "chatgrooproom",
+              path: "chatgrooproom/:roomId",
               name: "chat_groop_room",
               meta: {
                 needAuth: true,
@@ -62,12 +70,12 @@ const router = createRouter({
           component: () => import("@/views/NotifyView.vue"),
         },
         {
-          path: "addfriend",
-          name: "add_friend",
+          path: "addrequest",
+          name: "add_request",
           meta: {
             needAuth: true,
           },
-          component: () => import("@/views/AddFriendView.vue"),
+          component: () => import("@/views/AddRequestView.vue"),
         },
         {
           path: "user",

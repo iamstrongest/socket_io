@@ -32,7 +32,7 @@ const notifyStore = useNotifyStore();
 .nofity-container {
     box-sizing: border-box;
     width: 100%;
-    height: 100vh;
+    height: 95vh;
     color: var(--info_color);
     display: flex;
     align-items: center;

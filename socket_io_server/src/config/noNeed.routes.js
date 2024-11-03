@@ -1,1 +1,1 @@
-export default [/\/api\/login/, /\/api\/register/];
+export default [/\/api\/login/, /\/api\/register/,];

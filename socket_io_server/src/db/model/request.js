@@ -22,8 +22,8 @@ CREATE TABLE request (
 export function createRequestTable(db, callback) {
   db.query(createUsersTableSql, (err, results) => {
     if (err) {
-      return callback("创建 Request 表失败:" + err);
+      return callback("创建 request 表失败:" + err);
     }
-    callback(null, "Request 表创建成功或已存在");
+    callback(null, "request 表创建成功或已存在");
   });
 }

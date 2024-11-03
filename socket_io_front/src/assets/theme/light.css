@@ -1,12 +1,21 @@
 :root[data-theme=light] {
     --chat_background_img: url('@/assets/img/chat_background_white.png');
     --color: #000;
+    --footer_background__color: #000;
+    --footer___color: #fff;
     --resizer_background_color:#000;
     --border__color: #000;
     --info_color: #000;
     --background__color:#fff;
     --request_card_background_color: #000;
     --request_card_font_color: #fff;
+    --chat_talk_top_background_color: #fff;
+    --chat_talk_top__color: #000;
+    --chat_talk_user_background_color: #000;
+    --chat_talk_user__color: #fff;
+    --chat_talk_user_border__color: #ccc;
+    --chat_talk_user_menu_background__color: #fff;
+    --chat_talk_user_menu___color: #000;
     --chat_talk_background_color: #000;
     --chat_talk_font_color: #fff;
     --chat_talk_h3_color: #000;
@@ -17,4 +26,6 @@
     --more_font_color: #fff;
     --add_form_background_color: #000;
     --add_form_font_color: #fff;
+    --menu_background_color: #000;
+    --menu_color: #fff;
 }

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-01-06 23:26:44
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 20:34:33
+ * @LastEditTime: 2024-11-01 17:20:53
  * @FilePath: \Front-end\uni-app\uni-project\REMADE.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -97,6 +97,50 @@ npm run start:pm2
 1. 浏览器地址栏会出现安装的标志，允许安装即可
 2. 要使 Web 应用程序可安装，它必须在安全上下文中提供。通常意味着它必须通过 HTTPS 提供。本地资源，如 localhost、127.0.0.1 和 file:// 也被视为安全。
 3. 暂时不引用service-worker技术
+#### 压测接口
+全局安装 autocannon
+```sh
+npm i autocannon -g
+```
+socket_io_server项目再里面在运行
+```sh
+npm i autocannon
+```
+autocannon.js
+```js
+import autocannon from "autocannon";
+// 接口压测工具
+autocannon(
+  {
+    url: "http://122.13.48.121:3333/api/detail?id=7",//压测地址
+    headers: {
+      accept: "application/json, text/plain, */*",
+      "accept-language": "zh-CN,zh;q=0.9",
+      authorization:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzCI6MTczzMwNDU0NjY1fQ.3giUqkKqhtrONCMSJQcpi3nqq3GzhqQT8Vy47JPdleU",
+      // "cookie": "acw_tc=0bca324216820466206848044ebf9191e5a0e4b89a4e9bc8b18e333d13f537",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+    },
+    body: "你的参数",
+    method: "GET", // 你接口的methods get / post
+    connections: 10, // 连接数(相当于此时间1个用户给服务器发送的请求数量)
+    pipelining: 500, // 流水线数量(相当于此时间有N个用户同时访问服务器)
+    duration: 10, // 持续时间
+  },
+  console.log
+);
+```
+运行
+```sh
+node .\autocannon.js
+```
+看控制台打印结果，主要看 errors,timeouts 这两个字段就行了
+```json
+{
+  "errors":500,
+   "timeouts":500
+}
+```
 ## 远程服务器自动化部署，以及代码自动上传git
 1. 编写配置文件 socket_io_front项目中的 config目录的deplop.js,是远程项目的配置
 ```js

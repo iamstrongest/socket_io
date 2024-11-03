@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-03-09 16:39:50
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-22 15:37:06
+ * @LastEditTime: 2024-11-01 23:12:22
  * @FilePath: \Front-end\uni-app\uni-project\admin\src\utils\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,8 +19,11 @@ service.interceptors.request.use(
   function (config) {
     const userStore = useUserStore(pinia);
     const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.authorization = token;
+
+    if (!config.url.includes("/refresh")) {
+      if (token) {
+        config.headers.authorization = token;
+      }
       if (userStore?.user?.info?.uuid) {
         config.headers.uuid = userStore?.user?.info?.uuid;
       }
@@ -39,18 +42,61 @@ service.interceptors.response.use(
     const {
       data: { code },
     } = response;
+    if (code == 401) {
+      const originalRequestConfig = response.config;
+      console.log("token失效，使用refreshtoken");
+      const {
+        data: { code, refresh_token, token },
+      } = await refreshFn("/refresh");
+      if (code === 200) {
+        storageFn(token, refresh_token);
+        // 重新发送请求
+        return service(originalRequestConfig);
+      }
+    }
+    if (code == 406) {
+      console.log("刷新token失效");
+      clearStorageFn();
+      alert(httpCode[406]);
+      return router.push("/login");
+    }
+    if (code == 427) {
+      alert(httpCode[427]);
+      return router.push("/login");
+    }
     if (code !== 200) {
       alert(httpCode[code]);
     }
-    if (code == 401 || code == 427) {
-      localStorage.removeItem("token");
-      router.push("/login");
-    }
+
     return response;
   },
   function (error) {
+    alert("当前用户请过过多，服务器超时");
     return Promise.reject(error);
   }
 );
-
+async function refreshFn(url) {
+  const refresh_token = localStorage.getItem("refresh_token");
+  if (!refresh_token) {
+    return router.push("/login");
+  }
+  const res = await service.get(url, {
+    headers: {
+      refresh_token: refresh_token,
+    },
+  });
+  return res;
+}
+export function storageFn(token, refresh_token) {
+  if (token) {
+    localStorage.setItem("token", token);
+  }
+  if (refresh_token) {
+    localStorage.setItem("refresh_token", refresh_token);
+  }
+}
+export function clearStorageFn() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("refresh_token");
+}
 export default service;

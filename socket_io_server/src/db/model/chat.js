@@ -15,8 +15,8 @@ CREATE TABLE single_chat (
 export function createChatTable(db, callback) {
   db.query(createChatTableSql, (err, results) => {
     if (err) {
-      return callback("创建 Chat 表失败:" + err);
+      return callback("创建 single_chat 表失败:" + err);
     }
-    callback(null, "Chat 表创建成功或已存在");
+    callback(null, "single_chat 表创建成功或已存在");
   });
 }

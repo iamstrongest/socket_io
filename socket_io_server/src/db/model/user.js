@@ -25,8 +25,8 @@ CREATE TABLE user (
 export function createUsersTable(db, callback) {
   db.query(createUsersTableSql, (err, results) => {
     if (err) {
-      return callback("创建 Users 表失败:" + err);
+      return callback("创建 user 表失败:" + err);
     }
-    callback(null, "Users 表创建成功或已存在");
+    callback(null, "user 表创建成功或已存在");
   });
 }

@@ -56,9 +56,9 @@ export function ioInit(httpServer) {
         });
       }
     });
-    socket.on("send_chat", async (data) => {
+    socket.on("send_single_chat", async (data) => {
       // 回应者的userId,以及回应者的sdp
-      const { roomId, sendId, conment, receiveId, type } = data;
+      const { roomId, sendId, conment, receiveId, type, createdAt } = data;
       const sql = `insert into single_chat(roomId,conment,sendId, receiveId,type) VALUES(?,?,?,?,?)`;
       //    插入聊天记录
       await new Promise((resolve, reject) => {
@@ -85,10 +85,13 @@ export function ioInit(httpServer) {
         receiveId,
         sendIdUsername: user.username,
         sendIdAvatar: user.avatar,
+        createdAt,
         type,
         msg: `有信息请您注意查收`,
       };
-      io.to(receiveId).emit("receive", sendData);
+      console.log(sendData);
+      
+      io.to(receiveId).emit("single_receive", sendData);
     });
     socket.on("send_notify", async (data) => {
       // 1. 系统通知 2. 好友申请通知 3.处理好友申请
@@ -213,6 +216,46 @@ export function ioInit(httpServer) {
         });
         socket.to(sendId).emit("receive_notify", insertData);
       }
+    });
+    socket.on("send_group_chat", async (data) => {
+      const {
+        roomId,
+        sendId,
+        conment,
+        sendIdUsername,
+        sendIdAvatar,
+        type = 1,
+        createdAt,
+      } = data;
+      const sql = `insert into group_chat(roomId,sendId,conment,type) VALUES(?,?,?,?)`;
+      await new Promise((resolve, reject) => {
+        db.query(sql, [roomId, sendId, conment, type], (err, rows) => {
+          if (err) return console.log(err.message);
+          resolve();
+        });
+      });
+      const selectSql = `select *  from group_room_user where roomId=?`;
+      const sqlData = await new Promise((resolve, reject) => {
+        db.query(selectSql, [roomId], (err, rows) => {
+          if (err) return console.log(err.message);
+          resolve(rows);
+        });
+      });
+      sqlData.forEach((row) => {
+        if (row.joinId !== sendId) {
+          const result = {
+            ...row,
+            conment,
+            type,
+            sendIdAvatar,
+            sendIdUsername,
+            createdAt,
+          };
+          console.log(result);
+          
+          socket.to(row.joinId).emit("group_receive", result);
+        }
+      });
     });
     socket.on("logout", (data) => {
       const { id, username } = data;

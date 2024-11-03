@@ -1,6 +1,15 @@
+/*
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-10-20 11:06:34
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-11-02 12:07:32
+ * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\controller\user.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import {
   registService,
   loginService,
+  refreshService,
   getUserinfoService,
   addFriendService,
   getFriendService,
@@ -22,6 +31,11 @@ export const loginController = async function (req, res) {
   const result = await loginService(params);
   res.send(result);
 };
+export const refreshController = async function (req, res) {
+  const params = { id: req.id, email: req.email };
+  const result = await refreshService(params);
+  res.send(result);
+};
 export const logoutController = async function (req, res) {};
 
 export const addFriendController = async function (req, res) {
@@ -35,6 +49,8 @@ export const addFriendController = async function (req, res) {
 };
 export const getUserinfoController = async function (req, res) {
   const params = { email: req.email, id: req.id };
+  console.log(params);
+
   const result = await getUserinfoService(params);
   res.send(result);
 };

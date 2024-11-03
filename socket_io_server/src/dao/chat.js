@@ -1,5 +1,5 @@
 import db from "../db/index.js";
-import { httpCode } from "../config/constraint.js";
+import { httpCode, chatRoomType } from "../config/constraint.js";
 export const getChatFn = async function (params) {
   let { roomId, page } = params;
   console.log(roomId, page);
@@ -109,6 +109,7 @@ export const getRoomFn = async function (params) {
           item.username = rows[0].username;
           item.showUserId = rows[0].id;
           item.email = rows[0].email;
+          item.chatRoomType = chatRoomType["1"]; //私聊
         }
         resolve();
       });

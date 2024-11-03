@@ -5,16 +5,20 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=devlopment  nodemon ./app.js  && echo \"nodemon app.js --dev-- successfully started\"",
-    "preview": "cross-env NODE_ENV=preview nodemon start ./app.js && echo \"nodemon app.js--preview-- successfully started\"",
-    "start:pm2": "cross-env NODE_ENV=production pm2 start ./app.js && echo \"pm2 app.js--production-- successfully started\"",
-    "git":"node ./git-commit.js && echo \"node ./git-commit.js successfully\""
+    "dev:http": "cross-env NODE_ENV=http_devlopment  nodemon ./app.js  && echo \"nodemon app.js --dev-- successfully started\"",
+    "dev:https": "cross-env NODE_ENV=https_devlopment  nodemon ./app.js  && echo \"nodemon app.js --dev-- successfully started\"",
+    "preview:http": "cross-env NODE_ENV=http_preview nodemon start ./app.js && echo \"nodemon app.js--preview-- successfully started\"",
+    "preview:https": "cross-env NODE_ENV=https_preview nodemon start ./app.js && echo \"nodemon app.js--preview-- successfully started\"",
+    "start:http_pm2": "cross-env NODE_ENV=http_production pm2 start ./app.js && echo \"pm2 app.js--production-- successfully started\"",
+    "prod:https_pm2": "cross-env NODE_ENV=https_production pm2 start ./app.js && echo \"pm2 app.js--production-- successfully started\"",
+    "git": "node ./git-commit.js && echo \"node ./git-commit.js successfully\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "autocannon": "^8.0.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "express": "^4.21.1",

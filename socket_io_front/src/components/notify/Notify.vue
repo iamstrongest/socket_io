@@ -99,6 +99,7 @@ button {
     border: 2px solid #55bfa0;
     border-radius: 4px;
     color: #50b9fe;
+    cursor: pointer;
     background-color: #fff;
 }
 .conform {

@@ -4,7 +4,7 @@ import { useNotifyStore } from "@/stores/notify"
 import { nextTick, ref } from "vue";
 import { useUserStore } from "@/stores/user";
 import { socket } from "@/socket";
-import { iconRoutes } from "@/config/constraint"
+import { iconsAsideRoutes } from "@/config/constraint"
 const router = useRouter();
 const userStore = useUserStore();
 const notifyStore = useNotifyStore()
@@ -12,15 +12,15 @@ const popupRef = ref();
 const resizableRef = ref();
 const resizerRef = ref();
 function handleClicks(params, e) {
-    const { route, id } = params;
+    const { route, iconId } = params;
     e.stopPropagation();
-    if (id == 4) {
+    if (iconId == 4) {
         togglePopup();
     }
-    notifyStore.updateAsideActive(id)
+    notifyStore.updateAsideActive(iconId)
     route && router.push(route);
 }
-const icons = iconRoutes;
+const icons = iconsAsideRoutes;
 function togglePopup() {
     nextTick(() => {
         if (popupRef.value[0]) {
@@ -47,13 +47,13 @@ function stopResize() {
     window.removeEventListener('mouseup', stopResize);
 }
 function selectOption(params) {
-    let { route, id } = params;
-    if (id == 9) {
+    let { route, iconId } = params;
+    if (iconId == 9) {
         socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username })
         userStore.resetUserInfo();
         localStorage.removeItem('token');
     }
-    if (id == 6) {
+    if (iconId == 6) {
         route = `${route}?id=${userStore.user.info.id}`;
     }
     nextTick(() => {
@@ -77,15 +77,16 @@ window.onclick = function (event) {
     <aside ref="resizableRef">
         <div class="resizer" ref="resizerRef" @mousedown="mousedownHandle"></div>
         <div>
-            <div class="common hover" v-for="item of icons" :key="item.id"
-                :class="{ active: notifyStore.asideActive == item.id, popover: item.id == 4 }"
-                @click="(event) => handleClicks({ route: item.route, id: item.id }, event)" :title="item.title">
+            <div class="common hover" v-for="item of icons" :key="item.iconId"
+                :class="{ active: notifyStore.asideActive == item.iconId, popover: item.iconId == 4 }"
+                @click="(event) => handleClicks({ route: item.route, iconId: item.iconId }, event)" :title="item.title">
                 <svg class="icon" aria-hidden="true">
                     <use :xlink:href="item.class"></use>
                 </svg>
 
-                <div v-if="item.id == 4" ref="popupRef" class="more-action">
+                <div v-if="item.iconId == 4" ref="popupRef" class="more-action">
                     <div class="popup-item hover" v-for="item of icons[3].children" :title="item.title"
+                    :key="item.iconId"
                         @click="selectOption(item)">
                         <div class="inner">
                             <div class="more_icon">
@@ -117,7 +118,7 @@ aside {
     position: relative;
     box-sizing: border-box;
     padding: 1px;
-    height: 100vh;
+    height: 95vh;
     flex-direction: column;
     align-items: center;
     z-index: 10;
