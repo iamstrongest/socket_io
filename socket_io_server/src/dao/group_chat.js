@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-30 22:52:18
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-03 11:45:29
+ * @LastEditTime: 2024-11-03 20:30:12
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\dao\group_chat.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -154,9 +154,9 @@ export const getGroupRoomLastChatListFn = async function (params) {
   const { id } = params;
   const sort = "desc"; //desc降序 asc升序
   const limit = 10;
-  const sql = `SELECT * FROM group_chat where sendId=? order by updatedAt ${sort}`;
-  const sqlData = await new Promise((resolve, reject) => {
-    db.query(sql, [id], (err, rows) => {
+  const sql_group_room_user = `SELECT * FROM group_room_user where joinId=?`;
+  const sql_group_room_user_Data = await new Promise((resolve, reject) => {
+    db.query(sql_group_room_user, [id], (err, rows) => {
       if (err) return console.log(err.message);
       if (rows.length > 0) {
         resolve({
@@ -175,17 +175,23 @@ export const getGroupRoomLastChatListFn = async function (params) {
       }
     });
   });
+  console.log(sql_group_room_user_Data);
 
-  if (sqlData.length === 0) {
-    return sqlData;
+  if (sql_group_room_user_Data.length === 0) {
+    return sql_group_room_user_Data;
   }
-  const data = [];
-  sqlData.data.forEach((row) => {
-    if (!data.some((item) => item.roomId == row.roomId)) {
-      data.push(row);
-    }
-  });
-  for await (const item of data) {
+  let group_room_chat_data = [];
+  for await (const item of sql_group_room_user_Data.data) {
+    const sql = `select *  from group_chat where roomId=? order by updatedAt ${sort}`;
+    const resultData = await new Promise((resolve, reject) => {
+      db.query(sql, [item.roomId], (err, rows) => {
+        if (err) return console.log(err.message);
+        resolve(rows[0]);
+      });
+    });
+    group_room_chat_data.push(resultData);
+  }
+  for await (const item of group_room_chat_data) {
     const sql = `select *  from group_room where roomId=?`;
     await new Promise((resolve, reject) => {
       db.query(sql, [item.roomId], (err, rows) => {
@@ -197,11 +203,13 @@ export const getGroupRoomLastChatListFn = async function (params) {
       });
     });
   }
+  console.log(group_room_chat_data);
+
   const result = {
     code: 200,
     message: "查找聊天群聊会话房间成功",
     length: 0,
-    data: data,
+    data: group_room_chat_data,
     g: Date.now(),
   };
   return result;

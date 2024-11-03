@@ -55,6 +55,7 @@ watch(() => route.params.roomId, async (newValue, oldValue) => {
     roomInfo.value = resp.data;
     const { data: response } = await getGroupRoomUser(roomParams);
     roomUserList.value = response.data;
+    showUserList.value = response.data;
     const userIdentityParams = {
         roomId: newValue,
         joinId: userStore.user.info.id
@@ -301,7 +302,7 @@ onBeforeUnmount(() => {
         <template v-if="roomUserList.length > 0">
             <div class="search">
                 <input type="text" name="search" id="search" placeholder="输入昵称" v-model="searchText">
-                <div class="icons" >
+                <div class="icons">
                     <svg class="icon" aria-hidden="true">
                         <use xlink:href="#icon-sousuo"></use>
                     </svg>

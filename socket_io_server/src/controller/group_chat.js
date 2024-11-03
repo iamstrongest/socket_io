@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-30 23:09:41
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-02 15:42:43
+ * @LastEditTime: 2024-11-03 20:07:11
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\controller\group_chat.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -67,7 +67,7 @@ export const insertGroupRoomUserController = async function (req, res) {
   const params = {
     roomId: req.body.roomId,
     joinId: req.body.joinId,
-    identity: req.body.joinId,
+    identity: req.body.identity,
   };
   const result = await insertGroupRoomUserService(params);
   res.send(result);
