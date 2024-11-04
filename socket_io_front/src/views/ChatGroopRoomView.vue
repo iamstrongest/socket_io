@@ -46,10 +46,12 @@ watch(searchText, (newValue, oldValue) => {
 })
 watch(() => route.params.roomId, async (newValue, oldValue) => {
     chatStore.resetChatList();
+    chatStore.resetroomUserList();
     chatStore.updateActiveRoomId(newValue);
     const roomParams = { roomId: newValue };
     const { data: resp } = await getGroupRoom(roomParams);
     roomInfo.value = resp.data;
+    await chatStore.getGroupRoomUserFn(roomParams);
     showUserList.value = chatStore.roomUserList;
     const userIdentityParams = {
         roomId: newValue,
