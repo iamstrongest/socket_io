@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-30 23:07:52
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-01 15:00:01
+ * @LastEditTime: 2024-11-04 10:13:28
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\service\group_chat.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,7 +20,7 @@ import {
   insertGroupRequestFn,
   updateGroupRequestFn,
   getGroupRequestListFn,
-  getGroupRoomListFn
+  getGroupRoomListFn,
 } from "../dao/group_chat.js";
 import { dirname } from "path";
 import fs from "fs";
@@ -136,7 +136,7 @@ export const insertGroupRoomUserService = async function (req) {
 
 /**
  *
- * @param {*} req {roomId:string[群聊id],joinId:number[用户id],identity:number[权限]}
+ * @param {*} req {roomId:string[群聊id],joinId:number[用户id],identity:number[权限],handleId:number[处理人Id]}
  * @returns
  */
 export const updateGroupUserIdentityService = async function (req) {
@@ -145,7 +145,7 @@ export const updateGroupUserIdentityService = async function (req) {
 };
 /**
  *
- * @param {*} req {roomId:string[群聊id],joinId:number[用户id]}
+ * @param {*} req {roomId:string[群聊id],joinId:number[用户id],handleId:number[处理人Id]}
  * @returns
  */
 export const deleteGroupUserService = async function (req) {

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 20:46:52
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-03 12:05:51
+ * @LastEditTime: 2024-11-04 16:02:47
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\friend\FriendList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -14,9 +14,10 @@ import { getFriend } from "@/utils/api/user"
 import NoData from "@/components/NoData.vue"
 import { useNotifyStore } from "@/stores/notify"
 import { useChatStore } from "@/stores/chat"
-import { iconsUser } from "@/config/constraint"
+import { iconsUser, iconGroup } from "@/config/constraint"
+import { socket } from "@/socket";
 import Mask from "@/components/Mask.vue"
-import { insertGroupRoomUser, insertGroupChat, getGroupRoomList } from "@/utils/api/group_chat"
+import { insertGroupRoomUser, insertGroupChat, getGroupRoomList, deleteGroupUser } from "@/utils/api/group_chat"
 import AddGroupForm from '@/components/form/AddGroupForm.vue';
 import AddRoomForm from '@/components/form/AddRoom.vue';
 const notifyStore = useNotifyStore()
@@ -33,7 +34,8 @@ const showCreateRoom = ref(false);
 const showAddRoom = ref(false);
 const info = reactive({
     selectId: '',
-    username: ''
+    username: '',
+    avatar: ''
 })
 const activeSelectId = ref(1);
 const searchText = ref('');
@@ -55,19 +57,14 @@ watch(searchText, (newValue, oldValue) => {
                 return chat.roomName.indexOf(newValue) !== -1
             });
         }
-
     }
 })
-/**
- * 
- * @param roomId 房间号
- */
 function jump(roomId, receiveId) {
     notifyStore.updateAsideActive(2);
     chatStore.updateChatActive(roomId);
     chatStore.updateActiveRoomId(roomId);
     let path;
-    if (activeSelectId === 1) {
+    if (activeSelectId.value === 1) {
         path = `/chat/chatsingleroom/${roomId}?receiveId=${receiveId}`;
     } else {
         path = `/chat/chatgrooproom/${roomId}`;
@@ -104,9 +101,9 @@ function menuFn(event, id) {
 }
 function clickHandle(e, params) {
     e.stopPropagation();
-    console.log(params);
     info.selectId = params.id;
     info.username = params.username;
+    info.avatar = params.avatar;
     if (params.iconId == 9) {
         goDetailFn(params.id);
     }
@@ -120,6 +117,29 @@ function clickHandle(e, params) {
         showAddRoom.value = true;
     }
     documentClickFn();
+}
+async function quitGroup(e, params) {
+    e.stopPropagation();
+    const data = {
+        roomId: params.roomId, joinId: userStore.user.info.id, handleId: userStore.user.info.id
+    }
+    const { data: resp } = await deleteGroupUser(data);
+    if (resp.code !== 200) {
+        return alert(resp.message);
+    }
+    const indexOf = groupRoomList.value.findIndex((item) => item.roomId === params.roomId);
+    groupRoomList.value.splice(indexOf, 1);
+    const roomId = params.roomId;
+    const sendId = userStore.user.info.id;
+    const conment = `${userStore.user.info.username}退出了群聊`;
+    const type = 1;
+    const sendIdUsername = userStore.user.info.username;
+    const sendIdAvatar = userStore.user.info.avater;
+    const deleteId = userStore.user.info.id;
+    const chatParams = {
+        roomId, sendId, conment, type, sendIdUsername, sendIdAvatar, deleteId, isChat: false
+    }
+    socket.emit("send_group_chat", chatParams);
 }
 function goDetailFn(id) {
     customMenuRef.value[0].style.display = 'none'; // 点击后隐藏菜单
@@ -154,12 +174,22 @@ async function confirmFn(roomId) {
 async function confirmAddRoomFn(roomId) {
     showAddRoom.value = false;
     // 1是群主 2是管理员 3是群众
-    await joinGroupFn(roomId, info.selectId, 3);//给被邀请者普通用户权限
+    const code = await joinGroupFn(roomId, info.selectId, 3);//给被邀请者普通用户权限
+    if (code == -1) {
+        return
+    }
+    const sendId = info.selectId;
+    const conment = `${info.username}加入房间`
     const data = {
         roomId,
-        sendId: info.selectId,
-        conment: `${info.username}加入房间`
+        sendId,
+        conment
     }
+    const type = 1;
+    const sendIdUsername = info.username;
+    const sendIdAvatar = info.avatar;
+    const params = { roomId, sendId, conment, type, sendIdUsername, sendIdAvatar, isChat: false, addUser: true };
+    socket.emit("send_group_chat", params);
     await insertGroupChat(data);
 }
 // 1是群主 2是管理员 3是群众
@@ -170,7 +200,7 @@ async function joinGroupFn(roomId, joinId, identity = 3) {
     }
     const { data: resp } = await insertGroupRoomUser(data);
     if (resp.code !== 200) {
-        alert(resp.message);
+        return -1;
     }
 }
 function documentClickFn(e) {
@@ -259,10 +289,28 @@ onUnmounted(() => {
                 </div>
             </template>
             <template v-else>
-                <div class="frind hover" v-for="(item) of showList" :key="item.roomId"
-                    @click="jump(item.roomId, item.id)">
+                <div class="group hover" v-for="(item) of showList" :key="item.roomId"
+                    @contextmenu="(event) => menuFn(event, item.id)" @click="jump(item.roomId, item.id)">
                     <img :src="item.avatar" alt="群聊头像" title="群聊头像">
                     <strong :title="item.roomName">{{ item.roomName }}</strong>
+                    <div v-if="activeId === item.id" ref="customMenuRef" id="customMenu">
+                        <ul>
+                            <li v-for="iconItem in iconGroup" @click="(event) => quitGroup(
+                                event,
+                                {
+                                    ...iconItem,
+                                    ...item
+                                }
+                            )" :key="iconItem.iconId">
+                                <div class="more_icon">
+                                    <svg class="icon" aria-hidden="true">
+                                        <use :xlink:href="iconItem.class"></use>
+                                    </svg>
+                                </div>
+                                <span>{{ iconItem.title }}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </template>
         </template>
@@ -348,7 +396,8 @@ h3 span:hover {
     margin-right: 5px;
 }
 
-.frind {
+.frind,
+.group {
     cursor: pointer;
     box-sizing: border-box;
     height: 40px;
@@ -368,13 +417,15 @@ h3 span:hover {
     color: #1cff00;
 }
 
-.frind img {
+.frind img,
+.group img {
     width: 30px;
     height: 30px;
     margin-right: 5px;
 }
 
-.frind strong {
+.frind strong,
+.group strong {
     white-space: nowrap;
     /* 不换行 */
     overflow: hidden;

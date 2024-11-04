@@ -2,19 +2,23 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 10:40:30
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-03 11:33:04
+ * @LastEditTime: 2024-11-04 13:38:53
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\stores\counter.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { reactive, ref } from "vue";
 import { defineStore } from "pinia";
 import { getRoomList } from "@/utils/api/chat";
-import { getGroupRoomLastChatList } from "@/utils/api/group_chat";
+import {
+  getGroupRoomLastChatList,
+  getGroupRoomUser,
+} from "@/utils/api/group_chat";
 export const useChatStore = defineStore("chat", () => {
   const chatActive = ref(-1);
   const activeRoomId = ref();
   const roomList = ref([]);
   const chatList = ref([]);
+  const roomUserList = ref([]);
   function updateChatActive(id) {
     chatActive.value = id;
   }
@@ -41,6 +45,23 @@ export const useChatStore = defineStore("chat", () => {
       ); //按照创建时间降序排序
     });
   }
+  async function getGroupRoomUserFn(params) {
+    const { data: response } = await getGroupRoomUser(params);
+    roomUserList.value = response.data;
+  }
+  function deleteGroupRoomUserFn(joinId) {
+    const indexOf = roomUserList.value.findIndex(
+      (item) => item.joinId == joinId
+    );
+    roomUserList.value.splice(indexOf, 1);
+  }
+  function updateGroupRoomUserIdenty(params) {
+    roomUserList.value.forEach((item) => {
+      if (item.joinId === params.joinId) {
+        item.identity = params.identity;
+      }
+    });
+  }
   function updateRoomList(params) {
     roomList.value.forEach((room) => {
       if (room.roomId === params.roomId) {
@@ -65,6 +86,13 @@ export const useChatStore = defineStore("chat", () => {
     }
     chatList.value.push(data);
   }
+  function addUserAfter(data) {
+    roomUserList.value.push({
+      ...data,
+      avater: data.sendIdAvatar,
+      username: data.sendIdUsername,
+    });
+  }
   function addBeforeChat(data) {
     if (data instanceof Array) {
       chatList.value.unshift(...data);
@@ -83,6 +111,11 @@ export const useChatStore = defineStore("chat", () => {
     roomList,
     activeRoomId,
     chatList,
+    roomUserList,
+    addUserAfter,
+    deleteGroupRoomUserFn,
+    getGroupRoomUserFn,
+    updateGroupRoomUserIdenty,
     updateActiveRoomId,
     getSingleRoomDataList,
     getGroupRoomLastChatDataList,

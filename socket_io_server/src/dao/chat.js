@@ -2,8 +2,6 @@ import db from "../db/index.js";
 import { httpCode, chatRoomType } from "../config/constraint.js";
 export const getChatFn = async function (params) {
   let { roomId, page } = params;
-  console.log(roomId, page);
-
   const sort = "desc"; //desc降序 asc升序
   const limit = 10;
   const sql = `SELECT * FROM single_chat where roomId=? order by updatedAt ${sort}`;

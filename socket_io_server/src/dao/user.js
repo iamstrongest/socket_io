@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 11:19:08
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-02 12:10:34
+ * @LastEditTime: 2024-11-04 13:51:58
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_server\src\dao\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -363,8 +363,6 @@ export const getAllUserDetailFn = async function () {
 };
 export const updateAvatarFn = async function (params) {
   const { id, avatar } = params;
-  console.log(id, avatar);
-
   const sql = `update user set avatar=? where id=?`;
   const sqlData = await new Promise((resolve, reject) => {
     db.query(sql, [avatar, id], (err, rows) => {

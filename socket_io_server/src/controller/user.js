@@ -49,8 +49,6 @@ export const addFriendController = async function (req, res) {
 };
 export const getUserinfoController = async function (req, res) {
   const params = { email: req.email, id: req.id };
-  console.log(params);
-
   const result = await getUserinfoService(params);
   res.send(result);
 };

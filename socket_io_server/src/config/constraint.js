@@ -39,6 +39,8 @@ export const httpCode = {
   429: "暂无该群信息，请确定该群是否存在",
   430: "该群用户列表不存在",
   431: "已经提交过申请了，待管理人员处理申请",
+  432: "暂无权限或非法操作,不能取消/新增管理员",
+  433: "暂无权限或非法操作，退出群聊失败",
 };
 const data = {};
 switch (process.env.NODE_ENV) {
@@ -84,10 +86,10 @@ switch (process.env.NODE_ENV) {
     break;
   case "https_production":
     data.httpPort = 443;
-    data.publicPath = "https://wind-cool.top:443";
+    data.publicPath = "https://wind1u-cooly.top:443";
     data.message = `Express server running at https://wind-coqewol.top:443/page`;
     data.hosts = [`121.43.11.11:443`, `https://wiqand-coolqsa.top:443`];
-    data.socketOrigin = "https://wind-cool.top:443";
+    data.socketOrigin = "https://win13d-coodlsds.top:443";
     break;
 }
 export const serverConfig = data;

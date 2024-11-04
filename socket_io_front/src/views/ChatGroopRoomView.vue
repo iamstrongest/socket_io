@@ -2,10 +2,8 @@
 import { onMounted, ref, nextTick, onBeforeUnmount, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
-    insertGroupRoomUser,
     getGroupRoomChatList,
     getGroupRoom,
-    getGroupRoomUser,
     getGroupUserIdentity,
     updateGroupUserIdentity,
     deleteGroupUser
@@ -34,7 +32,6 @@ const icons = [
 ]
 const isMove = ref(false);
 const roomInfo = ref({});
-const roomUserList = ref([]);
 const showUserList = ref([]);
 const customMenuRef = ref();
 const activeId = ref('');
@@ -42,9 +39,9 @@ const userIdentityRoom = ref();
 const searchText = ref('');
 watch(searchText, (newValue, oldValue) => {
     if (newValue.length === 0) {
-        showUserList.value = roomUserList.value;
+        showUserList.value = chatStore.roomUserList.value;
     } else {
-        showUserList.value = roomUserList.value.filter(user => user.username.indexOf(newValue) !== -1);
+        showUserList.value = chatStore.roomUserList.value.filter(user => user.username.indexOf(newValue) !== -1);
     }
 })
 watch(() => route.params.roomId, async (newValue, oldValue) => {
@@ -53,9 +50,7 @@ watch(() => route.params.roomId, async (newValue, oldValue) => {
     const roomParams = { roomId: newValue };
     const { data: resp } = await getGroupRoom(roomParams);
     roomInfo.value = resp.data;
-    const { data: response } = await getGroupRoomUser(roomParams);
-    roomUserList.value = response.data;
-    showUserList.value = response.data;
+    showUserList.value = chatStore.roomUserList;
     const userIdentityParams = {
         roomId: newValue,
         joinId: userStore.user.info.id
@@ -80,16 +75,14 @@ function handleClick() {
     const sendId = userStore.user.info.id;
     const date = new Date();
     chatStore.updateRoomList({ roomId, conment, createdAt: date });
-    const receiveId = parseInt(route.query.receiveId);
     const type = 1;
     const sendIdUsername = userStore.user.info.username;
     const sendIdAvatar = userStore.user.info.avatar;
-    const params = { roomId, sendId, conment, receiveId, type, sendIdUsername, sendIdAvatar };
+    const params = { roomId, sendId, conment, type, sendIdUsername, sendIdAvatar, isChat: true };
     chatStore.addAfterChat({
         conment,
         roomId,
         sendId,
-        receiveId,
         type,
         sendIdUsername,
         sendIdAvatar
@@ -152,7 +145,6 @@ function onMouseUp() {
 function menuFn(event, id) {
     activeId.value = id;
     event.preventDefault();
-    console.log(customMenuRef.value);
     if (customMenuRef.value && customMenuRef.value[0]) {
         customMenuRef.value[0].style.display = 'block';
         customMenuRef.value[0].style.left = `0px`;
@@ -160,9 +152,10 @@ function menuFn(event, id) {
     }
 }
 async function clickHandle(event, params) {
+    console.log(params);
     event.stopPropagation();
     const data = {
-        roomId: params.roomId, joinId: params.joinId,
+        roomId: params.roomId, joinId: params.joinId, handleId: userStore.user.info.id
     }
     if (params.methodId === 1) {
         data.identity = 2;
@@ -171,11 +164,7 @@ async function clickHandle(event, params) {
         if (resp.code !== 200) {
             alert(resp.message);
         }
-        roomUserList.value.forEach(item => {
-            if (item.joinId === params.joinId) {
-                item.identity = 2;
-            }
-        })
+        chatStore.updateGroupRoomUserIdenty({ joinId: params.joinId, identity: 2 })
         return;
     }
     if (params.methodId === 2) {
@@ -184,21 +173,34 @@ async function clickHandle(event, params) {
         if (resp.code !== 200) {
             alert(resp.message);
         }
-        roomUserList.value.forEach(item => {
-            if (item.joinId === params.joinId) {
-                item.identity = 3;
-            }
-        })
+        chatStore.updateGroupRoomUserIdenty({ joinId: params.joinId, identity: 3 })
         return;
     }
     if (params.methodId === 3) {
-        let indexOf;
         const { data: resp } = await deleteGroupUser(data);
         if (resp.code !== 200) {
             alert(resp.message);
         }
-        indexOf = roomUserList.value.indexOf((item) => item.joinId === params.joinId);
-        roomUserList.value.splice(indexOf, 1);
+        chatStore.deleteGroupRoomUserFn(params.joinId);
+        const roomId = params.roomId;
+        const sendId = userStore.user.info.id;
+        const date = new Date();
+        const conment = `${userStore.user.info.username}将${params.username}移除了群聊`;
+        chatStore.updateRoomList({ roomId, conment, createdAt: date });
+        const type = 1;
+        const sendIdUsername = userStore.user.info.username;
+        const sendIdAvatar = userStore.user.info.avatar;
+        const deleteId = params.joinId;
+        const chatParams = { roomId, sendId, conment, type, sendIdUsername, sendIdAvatar, deleteId, isChat: false };
+        chatStore.addAfterChat({
+            conment,
+            roomId,
+            sendId,
+            type,
+            sendIdUsername,
+            sendIdAvatar,
+        });
+        socket.emit("send_group_chat", chatParams);
         return;
     }
     if (params.methodId === 4) {
@@ -217,9 +219,8 @@ onMounted(async () => {
     const roomParams = { roomId: roomId };
     const { data: resp } = await getGroupRoom(roomParams);
     roomInfo.value = resp.data;
-    const { data: response } = await getGroupRoomUser(roomParams);
-    roomUserList.value = response.data;
-    showUserList.value = response.data;
+    await chatStore.getGroupRoomUserFn(roomParams)
+    showUserList.value = chatStore.roomUserList;
     const userIdentityParams = {
         roomId,
         joinId: userStore.user.info.id
@@ -299,7 +300,7 @@ onBeforeUnmount(() => {
         </div>
     </div>
     <div class="group-user-tontainer">
-        <template v-if="roomUserList.length > 0">
+        <template v-if="chatStore.roomUserList.length > 0">
             <div class="search">
                 <input type="text" name="search" id="search" placeholder="输入昵称" v-model="searchText">
                 <div class="icons">
@@ -308,7 +309,7 @@ onBeforeUnmount(() => {
                     </svg>
                 </div>
             </div>
-            <div class="group-user-info-tontainer" v-for=" user in showUserList" :key="user.id"
+            <div class="group-user-info-tontainer" v-for=" user in showUserList" :key="user.joinId"
                 @contextmenu="(event) => menuFn(event, user.joinId)">
                 <img :src="user.avatar" alt="用户头像">
                 <div class="group-user-info-tontainer-right">

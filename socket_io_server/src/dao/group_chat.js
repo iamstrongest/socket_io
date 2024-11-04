@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-30 22:52:18
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-03 20:30:12
+ * @LastEditTime: 2024-11-04 13:51:17
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\dao\group_chat.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -175,8 +175,6 @@ export const getGroupRoomLastChatListFn = async function (params) {
       }
     });
   });
-  console.log(sql_group_room_user_Data);
-
   if (sql_group_room_user_Data.length === 0) {
     return sql_group_room_user_Data;
   }
@@ -203,8 +201,6 @@ export const getGroupRoomLastChatListFn = async function (params) {
       });
     });
   }
-  console.log(group_room_chat_data);
-
   const result = {
     code: 200,
     message: "查找聊天群聊会话房间成功",
@@ -263,8 +259,6 @@ export const getGroupRoomListFn = async function (params) {
 // 创建群聊
 export const createGroupRoomFn = async function (params) {
   const { roomName, avatar } = params;
-  console.log(roomName, avatar);
-
   // 创建12位数的群聊房间号
   const roomId = generateSixDigitNumber() + String(Date.now()).slice(7);
   const sql = `insert into group_room(roomId,roomName,avatar ) VALUES(?,?,?)`;
@@ -381,8 +375,6 @@ export const insertGroupRequestFn = async function (params) {
 // 获取群聊申请列表
 export const getGroupRequestListFn = async function (params) {
   const { joinId } = params;
-  console.log(joinId);
-
   const sort = "desc"; //desc降序 asc升序
   const limit = 10;
   // 获取申请列表
@@ -527,37 +519,108 @@ export const insertGroupChatFn = async function (params) {
 };
 // 更改群聊用户管理权限
 export const updateGroupUserIdentityFn = async function (params) {
-  let { roomId, joinId, identity } = params;
-  console.log(roomId, joinId, identity);
-
-  const selectUsersql = `update group_room_user set identity=? where roomId=? and joinId=?`;
-  const result = await new Promise((resolve, reject) => {
-    db.query(selectUsersql, [identity, roomId, joinId], (err, rows) => {
+  let { roomId, joinId, identity, handleId } = params;
+  // 先查询处理人有无权限
+  const selectUserIdentysql = `select * from group_room_user where roomId=? and joinId=?`;
+  const resultIdenty = await new Promise((resolve, reject) => {
+    db.query(selectUserIdentysql, [roomId, handleId], (err, rows) => {
       if (err) return console.log(err.message);
-      resolve({
-        code: 200,
-        message: "更改用群用户权限成功",
-        data: null,
-        g: Date.now(),
-      });
+      resolve(rows[0]);
     });
   });
-  return result;
+  if (
+    resultIdenty.identity === 1 || //处理人是房主
+    resultIdenty.identity === 2 //处理人是管理员
+  ) {
+    const selectUsersql = `update group_room_user set identity=? where roomId=? and joinId=?`;
+    const result = await new Promise((resolve, reject) => {
+      db.query(selectUsersql, [identity, roomId, joinId], (err, rows) => {
+        if (err) return console.log(err.message);
+        resolve({
+          code: 200,
+          message: "更改用群用户权限成功",
+          data: null,
+          g: Date.now(),
+        });
+      });
+    });
+    return result;
+  } else {
+    return {
+      code: 432,
+      message: httpCode[432],
+      data: null,
+      g: Date.now(),
+    };
+  }
 };
-// 删除群聊用户
+// 自己退出群聊，或者房主/管理员删除群聊用户
 export const deleteGroupUserFn = async function (params) {
-  let { roomId, joinId } = params;
-  const selectUsersql = `delete from  group_room_user  where roomId=? and joinId=?`;
-  const result = await new Promise((resolve, reject) => {
-    db.query(selectUsersql, [roomId, joinId], (err, rows) => {
+  let { roomId, joinId, handleId } = params;
+  const selectUserIdentysql = `select * from group_room_user where roomId=? and joinId=?`;
+  const resultIdenty = await new Promise((resolve, reject) => {
+    db.query(selectUserIdentysql, [roomId, handleId], (err, rows) => {
       if (err) return console.log(err.message);
-      resolve({
-        code: 200,
-        message: "更改用群用户权限成功",
-        data: null,
-        g: Date.now(),
-      });
+      resolve(rows[0]);
     });
   });
-  return result;
+  let conment;
+  const selectJoinUsersql = "select * from user where id=?";
+  const selectJoinUserData = await new Promise((resolve, reject) => {
+    db.query(selectJoinUsersql, [joinId], (err, rows) => {
+      if (err) return console.log(err.message);
+      resolve(rows[0]);
+    });
+  });
+  const selectHandleUsersql = "select * from user where id=?";
+  const selectHandleUserData = await new Promise((resolve, reject) => {
+    db.query(selectHandleUsersql, [handleId], (err, rows) => {
+      if (err) return console.log(err.message);
+      resolve(rows[0]);
+    });
+  });
+  if (joinId != handleId) {
+    conment = `${selectHandleUserData.username}将${selectJoinUserData.username}移除了群聊`;
+  } else {
+    conment = `${selectJoinUserData.username}退出了群聊`;
+  }
+
+  if (
+    handleId == joinId || //处理人是自己
+    resultIdenty.identity === 1 || //处理人是房主
+    resultIdenty.identity === 2 //处理人是管理员
+  ) {
+    const deleteSql = `delete from  group_room_user  where roomId=? and joinId=?`;
+    await new Promise((resolve, reject) => {
+      db.query(deleteSql, [roomId, joinId], (err, rows) => {
+        if (err) return console.log(err.message);
+        resolve();
+      });
+    });
+    //删除后，新增信息到群聊,如果是被移除，则发送人是群主或者管理员，否者是当前主动退出群聊的人
+    const sql = `insert into group_chat(roomId,sendId,conment ) VALUES(?,?,?)`;
+    await new Promise((resolve, reject) => {
+      db.query(
+        sql,
+        [roomId, joinId != handleId ? handleId : joinId, conment],
+        (err, rows) => {
+          if (err) return console.log(err.message);
+          resolve();
+        }
+      );
+    });
+    return {
+      code: 200,
+      message: "退出群聊成功",
+      data: null,
+      g: Date.now(),
+    };
+  }
+
+  return {
+    code: 433,
+    message: httpCode[433],
+    data: null,
+    g: Date.now(),
+  };
 };
