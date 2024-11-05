@@ -10,7 +10,7 @@ import db from "../db/index.js";
 export function sendSingleChat(socket, io) {
   socket.on("send_single_chat", async (data) => {
     // 回应者的userId,以及回应者的sdp
-    const { roomId, sendId, conment, receiveId, type, createdAt } = data;
+    const { roomId, sendId, conment, receiveId, type, updatedAt } = data;
     const sql = `insert into single_chat(roomId,conment,sendId, receiveId,type) VALUES(?,?,?,?,?)`;
     //    插入聊天记录
     await new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ export function sendSingleChat(socket, io) {
       receiveId,
       sendIdUsername: user.username,
       sendIdAvatar: user.avatar,
-      createdAt,
+      updatedAt,
       type,
       msg: `有信息请您注意查收`,
     };
@@ -54,7 +54,7 @@ export function sendGroupChat(socket, io) {
       sendIdUsername,
       sendIdAvatar,
       type = 1,
-      createdAt,
+      updatedAt,
       isChat = true,
       deleteId,
       addUser = false,
@@ -84,7 +84,7 @@ export function sendGroupChat(socket, io) {
           sendId,
           sendIdAvatar,
           sendIdUsername,
-          createdAt,
+          updatedAt,
         };
         if (deleteId) {
           result.deleteId = deleteId;

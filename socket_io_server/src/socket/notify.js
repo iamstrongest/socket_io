@@ -179,8 +179,8 @@ export function sendNotify(socket, io) {
           }
         );
       });
+      const sockets = [...io.sockets.sockets.values()];
       sqlData.forEach((item) => {
-        const sockets = [...io.sockets.sockets.values()];
         const filterSocket = sockets.find(
           (socket) => socket.userId == item.joinId
         );
@@ -247,7 +247,7 @@ export function sendNotify(socket, io) {
       });
       const sockets = [...io.sockets.sockets.values()];
       const filterSocket = sockets.find(
-        (socket) => socket.userId == ireceiveId
+        (socket) => socket.userId == receiveId
       );
       if (filterSocket) {
         io.to(filterSocket.id).emit("receive_notify", insertData);

@@ -2,14 +2,12 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-03-09 16:39:50
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-01 23:12:22
+ * @LastEditTime: 2024-11-05 17:04:34
  * @FilePath: \Front-end\uni-app\uni-project\admin\src\utils\api\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from "axios";
 import { httpCode } from "@/config/constraint";
-import { useUserStore } from "@/stores/user";
-import pinia from "@/stores/index";
 import router from "@/router";
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -17,15 +15,14 @@ const service = axios.create({
 });
 service.interceptors.request.use(
   function (config) {
-    const userStore = useUserStore(pinia);
     const token = localStorage.getItem("token");
-
+    const uuid = localStorage.getItem("uuid");
     if (!config.url.includes("/refresh")) {
       if (token) {
         config.headers.authorization = token;
       }
-      if (userStore?.user?.info?.uuid) {
-        config.headers.uuid = userStore?.user?.info?.uuid;
+      if (uuid) {
+        config.headers.uuid = uuid;
       }
     }
     return config;
@@ -87,16 +84,20 @@ async function refreshFn(url) {
   });
   return res;
 }
-export function storageFn(token, refresh_token) {
+export function storageFn(token, uuid, refresh_token) {
   if (token) {
     localStorage.setItem("token", token);
   }
   if (refresh_token) {
     localStorage.setItem("refresh_token", refresh_token);
   }
+  if (uuid) {
+    localStorage.setItem("uuid", uuid);
+  }
 }
 export function clearStorageFn() {
   localStorage.removeItem("token");
   localStorage.removeItem("refresh_token");
+  localStorage.removeItem("uuid");
 }
 export default service;

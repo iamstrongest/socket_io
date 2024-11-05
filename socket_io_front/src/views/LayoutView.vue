@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-01 00:14:38
+ * @LastEditTime: 2024-11-05 15:44:06
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -51,13 +51,12 @@ watch(() => userStore.user?.info?.theme, (newValue, oldValue) => {
         window.document.documentElement.setAttribute('data-theme', newValue);
     }
 })
-onMounted(() => {
+onMounted(async () => {
     window.document.documentElement.setAttribute('data-theme', userStore.user.info.theme || 'light')
-
     socket.on("friend_login", (data) => {
         const notification = new Notification("好友上线通知", {
             body: data.msg,
-            icon: "../assets/img/info.jpg" // 可选，图标路径
+            icon: '@/assets/img/info.jpg' // 可选，图标路径
         });
         notification.onclick = () => {
             window.focus(); // 点击通知时使窗口获得焦点
@@ -66,7 +65,7 @@ onMounted(() => {
     socket.on("friend_logout", (data) => {
         const notification = new Notification("好友下线通知", {
             body: data.msg,
-            icon: "../assets/img/info.jpg" // 可选，图标路径
+            icon: '@/assets/img/info.jpg' // 可选，图标路径
         });
         notification.onclick = () => {
             window.focus(); // 点击通知时使窗口获得焦点

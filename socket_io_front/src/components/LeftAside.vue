@@ -51,7 +51,12 @@ function selectOption(params) {
     if (iconId == 9) {
         socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username })
         userStore.resetUserInfo();
-        localStorage.removeItem('token');
+        localStorage.clear();
+        console.log("正在断开连接...");
+        socket.disconnect();// 主动断开连接
+        // socket.close(); // 彻底关闭连接，包括停止心跳
+        router.push(route);
+        window.location.reload();
     }
     if (iconId == 6) {
         route = `${route}?id=${userStore.user.info.id}`;
@@ -86,8 +91,7 @@ window.onclick = function (event) {
 
                 <div v-if="item.iconId == 4" ref="popupRef" class="more-action">
                     <div class="popup-item hover" v-for="item of icons[3].children" :title="item.title"
-                    :key="item.iconId"
-                        @click="selectOption(item)">
+                        :key="item.iconId" @click="selectOption(item)">
                         <div class="inner">
                             <div class="more_icon">
                                 <svg class="icon" aria-hidden="true">

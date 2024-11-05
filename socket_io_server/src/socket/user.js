@@ -1,3 +1,11 @@
+/*
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-11-03 21:43:30
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-11-05 19:30:28
+ * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\socket\user.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import db from "../db/index.js";
 export function login(socket, io) {
   socket.on("login", async (data) => {
@@ -32,8 +40,8 @@ export function login(socket, io) {
       });
     });
     if (friends.length > 0) {
+      const sockets = [...io.sockets.sockets.values()];
       friends.data.forEach((item) => {
-        const sockets = [...io.sockets.sockets.values()];
         const filterSocket = sockets.find(
           (socket) => socket.userId == item.receiveId
         );
@@ -49,11 +57,11 @@ export function login(socket, io) {
     }
   });
 }
-export function logout(socket, io) {
-  socket.on("logout", (data) => {
+export async function logout(socket, io) {
+  socket.on("logout", async (data) => {
     const { id, username } = data;
     //   查找当前所有用户队列
-    const friends = new Promise((resolve, reject) => {
+    const friends = await new Promise((resolve, reject) => {
       const sql = `SELECT * FROM friend where sendId=? and status=?`;
       db.query(sql, [id, 2], (err, rows) => {
         if (err) return console.log(err.message);
@@ -71,11 +79,11 @@ export function logout(socket, io) {
       });
     });
     if (friends.length > 0) {
+      const sockets = [...io.sockets.sockets.values()];
       friends.data.forEach((item) => {
-        const sockets = [...io.sockets.sockets.values()];
-        const filterSocket = sockets.find(
-          (socket) => socket.userId == item.receiveId
-        );
+        const filterSocket = sockets.find((socket) => {
+          return socket.userId == item.receiveId;
+        });
         if (filterSocket) {
           io.to(filterSocket.id).emit("friend_logout", {
             msg: `您的好友-${username}-下线啦`,

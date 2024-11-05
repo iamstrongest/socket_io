@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-01 09:33:33
+ * @LastEditTime: 2024-11-05 21:20:43
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -59,10 +59,10 @@ function handleClick() {
     const roomId = route.params.roomId;
     const sendId = userStore.user.info.id;
     const date = new Date();
-    chatStore.updateRoomList({ roomId, conment, createdAt: date });
+    const updatedAt = date;
     const receiveId = parseInt(route.query.receiveId);
     const type = 1;
-    const params = { roomId, sendId, conment, receiveId, type, createdAt: date };
+    const params = { roomId, sendId, conment, receiveId, type, updatedAt };
     const sendIdUsername = userStore.user.info.username;
     const sendIdAvatar = userStore.user.info.avatar;
     chatStore.addAfterChat({
@@ -74,6 +74,7 @@ function handleClick() {
         sendIdUsername,
         sendIdAvatar
     });
+    chatStore.updateRoomList({ roomId, conment, updatedAt });
     socket.emit("send_single_chat", params);
     nextTick(() => {
         editableDivRef.value.innerText = "";

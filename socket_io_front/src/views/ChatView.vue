@@ -20,7 +20,7 @@ onMounted(() => {
         if (chatStore.activeRoomId === data.roomId) {
             chatStore.addAfterChat(data);
         }
-        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, createdAt: data.createdAt });
+        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
     });
     socket.on("group_receive", (data) => {
         if (chatStore.activeRoomId === data.roomId) {
@@ -32,7 +32,7 @@ onMounted(() => {
                 chatStore.addUserAfter(data);
             }
         }
-        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, createdAt: data.createdAt });
+        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
     });
 });
 onUnmounted(() => {

@@ -76,7 +76,6 @@ function handleClick() {
     const roomId = route.params.roomId;
     const sendId = userStore.user.info.id;
     const date = new Date();
-    chatStore.updateRoomList({ roomId, conment, createdAt: date });
     const type = 1;
     const sendIdUsername = userStore.user.info.username;
     const sendIdAvatar = userStore.user.info.avatar;
@@ -89,6 +88,7 @@ function handleClick() {
         sendIdUsername,
         sendIdAvatar
     });
+    chatStore.updateRoomList({ roomId, conment, updatedAt: date });
     socket.emit("send_group_chat", params);
     nextTick(() => {
         editableDivRef.value.innerText = "";
@@ -188,7 +188,7 @@ async function clickHandle(event, params) {
         const sendId = userStore.user.info.id;
         const date = new Date();
         const conment = `${userStore.user.info.username}将${params.username}移除了群聊`;
-        chatStore.updateRoomList({ roomId, conment, createdAt: date });
+        chatStore.updateRoomList({ roomId, conment, updatedAt: date });
         const type = 1;
         const sendIdUsername = userStore.user.info.username;
         const sendIdAvatar = userStore.user.info.avatar;

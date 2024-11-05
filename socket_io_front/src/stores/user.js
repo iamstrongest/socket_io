@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 10:40:30
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-04 11:57:55
+ * @LastEditTime: 2024-11-05 18:29:29
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\stores\counter.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,6 +11,11 @@ import { defineStore } from "pinia";
 import { getUserinfo } from "@/utils/api/user";
 import { socket } from "@/socket";
 export const useUserStore = defineStore("userinfo", () => {
+  const socketConnectInfo = {
+    isConnect: false,
+    count: 0,
+    maxTry: 10,
+  };
   const user = reactive({
     info: {},
   });
@@ -21,9 +26,20 @@ export const useUserStore = defineStore("userinfo", () => {
     const { data: resp } = await getUserinfo();
     const { data } = resp;
     user.info = data;
-    socket.on("connect", () => {
-      socket.emit("login", { id: data.id });
-    });
+    if (user.info.id) {
+      console.log(socket.connected);
+      // 手动检查连接状态
+      if (socket.connected) {//有时候手动刷新，会导致不执行connect事件，connected连接状态是true，因此需要再次出发login事件
+        console.log("重新连接...");
+        socket.emit("login", { id: user.info.id });
+      } else {
+        socket.on("connect", () => {
+          //只会执行一次
+          console.log("连接成功");
+          socket.emit("login", { id: user.info.id });
+        });
+      }
+    }
   }
   function resetUserInfo() {
     user.info = {};
