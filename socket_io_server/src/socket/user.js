@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-11-03 21:43:30
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-05 19:30:28
+ * @LastEditTime: 2024-11-06 11:51:06
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\socket\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,8 +10,9 @@ import db from "../db/index.js";
 export function login(socket, io) {
   socket.on("login", async (data) => {
     // 一个用户ID,对应一条持久化在线提示
-    const { id } = data;
+    const { id, username } = data;
     socket.userId = id;
+    socket.username = username;
     // socket.join(id); //自己新创建一个房间，否者使用原先给定的，一旦前端刷新，房间就会被销毁
     // 查找登录者
     const user = await new Promise((resolve, reject) => {
@@ -94,6 +95,7 @@ export async function logout(socket, io) {
         // });
       });
     }
-    socket.leave(id); // 将某个房间的特定的连接的websocket对象断开
+    // socket.disconnect();
+    // socket.leave(socket.id); // 将某个房间的特定的连接的websocket对象断开
   });
 }

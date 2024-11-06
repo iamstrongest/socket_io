@@ -264,14 +264,14 @@ onBeforeUnmount(() => {
                         <img :src="item.sendIdAvatar" alt="头像">
                     </div>
                     <div class="chat-info-common">
-                        <h3>{{ item.sendIdUsername }}</h3>
+                        <h3 :title="item.sendIdUsername">{{ item.sendIdUsername }}</h3>
                         <p class="conment" :title="item.conment">{{ item.conment }}</p>
                     </div>
                 </div>
                 <!-- 发送者是自己 -->
                 <div v-else class="right-chat-info">
                     <div class="chat-info-common right-chat-info-div">
-                        <h3>{{ item.sendIdUsername }}</h3>
+                        <h3 :title="item.sendIdUsername">{{ item.sendIdUsername }}</h3>
                         <p class="conment" :title="item.conment">{{ item.conment }}</p>
                     </div>
                     <div>
@@ -315,7 +315,7 @@ onBeforeUnmount(() => {
                 @contextmenu="(event) => menuFn(event, user.joinId)">
                 <img :src="user.avatar" alt="用户头像">
                 <div class="group-user-info-tontainer-right">
-                    <span class="username" :title="user.username">{{ user.username }}</span>
+                    <div class="username" :title="user.username">{{ user.username }}</div>
                     <!-- 1为群主 2为管理员 3为普通群众 -->
                     <span v-if="user.identity !== 3"
                         :class="{ leader: user.identity === 1, manager: user.identity === 2 }" class="auth">
@@ -380,6 +380,9 @@ onBeforeUnmount(() => {
     flex-direction: column;
     box-sizing: border-box;
     color: var(--chat_talk_font_color);
+    background-image: var(--chat_background_img);
+    background-position: center;
+    background-size: cover;
     /* border-left: 1px solid #000; */
 }
 
@@ -464,6 +467,7 @@ onBeforeUnmount(() => {
 .group-user-tontainer div .auth {
     width: 50px;
     height: 30px;
+    font-size: 16px;
     line-height: 30px;
     text-align: center;
     border-radius: 5px;
@@ -520,7 +524,8 @@ onBeforeUnmount(() => {
 }
 
 .group-user-tontainer div .username {
-    flex: 1;
+    font-size: 16px;
+    width: 100px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

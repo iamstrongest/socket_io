@@ -103,7 +103,7 @@ async function handleClick(status) {
 <style scoped>
 .request-card-container {
     width: 600px;
-    height: 100px;
+    height: 150px;
     border-radius: 3px;
     border: 1px solid #ccc;
     background-color: var(--request_card_background_color);
@@ -113,7 +113,12 @@ async function handleClick(status) {
     align-items: center;
     margin: 50px 0;
 }
-
+.request-card-container p {
+    max-height: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;
+}
 .avatar,
 .info,
 .state {

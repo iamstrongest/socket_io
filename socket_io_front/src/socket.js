@@ -9,6 +9,6 @@
 import { io } from "socket.io-client";
 const ioBaseUrl =
   import.meta.env.MODE == "development"
-    ? "http://localhost:3030?username=strongest"
+    ? "http://localhost:3030?websiteTitle=LoveChat"
     : "/";
 export const socket = io(ioBaseUrl);

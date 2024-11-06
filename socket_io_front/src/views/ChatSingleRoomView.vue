@@ -168,14 +168,14 @@ onBeforeUnmount(() => {
                         <img :src="item.sendIdAvatar" alt="头像">
                     </div>
                     <div class="chat-info-common">
-                        <h3>{{ item.sendIdUsername }}</h3>
+                        <h3 :title="item.sendIdUsername">{{ item.sendIdUsername }}</h3>
                         <p class="conment" :title="item.conment">{{ item.conment }}</p>
                     </div>
                 </div>
                 <!-- 发送者是自己 -->
                 <div v-else class="right-chat-info">
                     <div class="chat-info-common right-chat-info-div">
-                        <h3>{{ item.sendIdUsername }}</h3>
+                        <h3 :title="item.sendIdUsername">{{ item.sendIdUsername }}</h3>
                         <p class="conment" :title="item.conment">{{ item.conment }}</p>
                     </div>
                     <div>
@@ -214,6 +214,9 @@ onBeforeUnmount(() => {
     flex-direction: column;
     box-sizing: border-box;
     color: var(--chat_talk_font_color);
+    background-image: var(--chat_background_img);
+    background-position: center;
+    background-size: cover;
     /* border-left: 1px solid #000; */
 }
 

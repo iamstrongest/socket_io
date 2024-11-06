@@ -39,7 +39,7 @@ const notifyStore = useNotifyStore();
     justify-content: center;
     flex-direction: column;
     background: url('@/assets/img/chat_background.png') no-repeat;
-    background-position: bottom;
+    background-position: center;
     background-size: cover;
 }
 

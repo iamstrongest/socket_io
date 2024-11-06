@@ -53,10 +53,11 @@ function selectOption(params) {
         userStore.resetUserInfo();
         localStorage.clear();
         console.log("正在断开连接...");
-        socket.disconnect();// 主动断开连接
+        socket.disconnect();// 主动断开连接,如果需要disconnect，则需要配合window.location.reload使用
         // socket.close(); // 彻底关闭连接，包括停止心跳
+        // window.location.reload();
         router.push(route);
-        window.location.reload();
+
     }
     if (iconId == 6) {
         route = `${route}?id=${userStore.user.info.id}`;
@@ -209,6 +210,7 @@ aside .hover:hover {
     min-width: 150px;
     /* 最小宽度 */
     height: 180px;
+    font-size: 16px;
     color: var(--more_font_color);
     ;
 }

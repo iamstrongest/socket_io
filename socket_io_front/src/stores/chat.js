@@ -14,13 +14,14 @@ import {
   getGroupRoomUser,
 } from "@/utils/api/group_chat";
 export const useChatStore = defineStore("chat", () => {
-  const chatActive = ref(-1);
-  const activeRoomId = ref();
+  const chatActive = ref(sessionStorage.getItem("chatActive") || -1);
+  const activeRoomId = ref(sessionStorage.getItem("activeRoomId"));
   const roomList = ref([]);
   const chatList = ref([]);
   const roomUserList = ref([]);
   function updateChatActive(id) {
     chatActive.value = id;
+    sessionStorage.setItem("chatActive", id);
   }
   async function getSingleRoomDataList(params) {
     const { data: resp } = await getRoomList(params);
@@ -78,6 +79,7 @@ export const useChatStore = defineStore("chat", () => {
   }
   function updateActiveRoomId(roomId) {
     activeRoomId.value = roomId;
+    sessionStorage.setItem("activeRoomId", roomId);
   }
   function addAfterChat(data) {
     if (data instanceof Array) {

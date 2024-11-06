@@ -1,11 +1,13 @@
 @import "./theme/dark.css";
 @import "./theme/light.css";
+
 :root {
   --confirm_font_color: green;
   --reject_font_color: red;
   --wait_font_color: grey;
   --send——container_background_color: #fff;
   --send——container_font_color: #000;
+  --default__img: url("@/assets/img/default.png");
 }
 
 

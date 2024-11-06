@@ -1,12 +1,11 @@
 <script setup>
 import { reactive } from "vue"
 const info = reactive({
-    eamil: '1309148358@qq.com',
-    recordText: "江西网安备 2032512330350号",
-    recordOrder: "江B2-20241030-4"
+    recordText: "赣ICP备2024047900号",
+    email: "1309***3**@qq.com"
 })
 function cilckHandle() {
-    navigator.clipboard.writeText(eamil.value)
+    navigator.clipboard.writeText(info.eamil)
         .then(() => {
             alert('邮箱已复制！');
         })
@@ -17,16 +16,15 @@ function cilckHandle() {
 </script>
 <template>
     <footer>
-        <!-- <p>联系我</p> -->
-        <!-- <p><span title="邮箱">邮箱：<i @click="cilckHandle">{{ info.eamil }}</i></span></p> -->
-        <p><span>
-                <a href="https://beian.mps.gov.cn/#/query/webSearch">
-                    {{ info.recordText }}
+        <p>
+            <span>
+                <a href="javascript:void(0);" @click="cilckHandle">
+                    联系我: {{ info.email }}
                 </a>
             </span>
             <span>
                 <a href="https://beian.miit.gov.cn/">
-                    {{ info.recordOrder }}
+                    {{ info.recordText }}
                 </a>
             </span>
         </p>

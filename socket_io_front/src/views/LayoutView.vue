@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-05 15:44:06
+ * @LastEditTime: 2024-11-06 11:00:54
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -42,6 +42,9 @@ function sendNotification(data) {
         window.focus(); // 点击通知时使窗口获得焦点
     };
 }
+function logout(event) {
+    socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username });
+}
 onBeforeMount(async () => {
     await userStore.setUserInfo();
     await notifyStore.setNotifiy();
@@ -53,6 +56,7 @@ watch(() => userStore.user?.info?.theme, (newValue, oldValue) => {
 })
 onMounted(async () => {
     window.document.documentElement.setAttribute('data-theme', userStore.user.info.theme || 'light')
+    // window.addEventListener("beforeunload", logout);//刷新或者直接退出浏览器，可以给提示
     socket.on("friend_login", (data) => {
         const notification = new Notification("好友上线通知", {
             body: data.msg,
@@ -72,7 +76,7 @@ onMounted(async () => {
         };
     });
     socket.on("disconnect", () => {
-        console.log(socket.connected); // false
+        console.log("断开连接");
     });
     window.onload = () => {
         if (Notification.permission !== "granted") {
@@ -110,5 +114,6 @@ main {
 
 .rightAise {
     width: 100%;
+    display: flex;
 }
 </style>

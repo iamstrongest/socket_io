@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 10:51:22
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-04 11:48:59
+ * @LastEditTime: 2024-11-06 15:44:45
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\chat\ChatList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -169,7 +169,7 @@ function stopResize() {
 
 .new-friends {
     box-sizing: border-box;
-    height: 40px;
+    height: 50px;
     display: flex;
     align-items: center;
     border-radius: 2px;
@@ -185,13 +185,13 @@ function stopResize() {
 }
 
 .new-friends strong {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .room-list {
     cursor: pointer;
     box-sizing: border-box;
-    height: 40px;
+    height: 50px;
     display: flex;
     align-items: center;
     border-radius: 2px;
@@ -209,7 +209,7 @@ function stopResize() {
 }
 
 .right-info {
-    height: 40px;
+    height: 50px;
     /* 或者设定具体宽度 */
     white-space: nowrap;
     /* 不换行 */
@@ -221,11 +221,11 @@ function stopResize() {
 }
 
 .right-info span {
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .right-info strong {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .right-info span,

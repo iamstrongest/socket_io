@@ -39,7 +39,7 @@ async function uploadHandle() {
     formData.append('timestamp', Date.now())
     const { data: resp } = await updateAvatarFn(formData);
     if (resp.code === 200) {
-        await userStore.setUserInfo();
+        await userStore.updateGetUserInfo();
     }
 }
 async function submitHandle() {
@@ -59,7 +59,7 @@ async function submitHandle() {
     }
     const { data: resp } = await updateUserinfoFn(data);
     if (resp.code === 200) {
-        await userStore.setUserInfo();
+        await userStore.updateGetUserInfo();
     }
 }
 </script>

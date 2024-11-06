@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 10:40:30
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-02 14:21:28
+ * @LastEditTime: 2024-11-06 15:13:17
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\router\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -122,6 +122,7 @@ router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
   if (to.meta.needAuth) {
     if (token) {
+      sessionStorage.setItem("needFresh", false);
       return next();
     } else {
       return next("/login");
@@ -130,6 +131,17 @@ router.beforeEach((to, from, next) => {
   if (!router.hasRoute(to.name)) {
     return next(`/notFound?path=${to.fullpath || to.path}`);
   }
+  const needFresh = JSON.parse(sessionStorage.getItem("needFresh"));
+  if (to.name == "login" && from.name != undefined && !needFresh) {
+    sessionStorage.setItem("needFresh", true);
+  }
   return next();
+});
+router.afterEach((to, from) => {
+  const needFresh = JSON.parse(sessionStorage.getItem("needFresh"));
+  if (to.name == "login" && from.name != undefined && needFresh) {
+    sessionStorage.setItem("needFresh", false);
+    window.location.reload();
+  }
 });
 export default router;
