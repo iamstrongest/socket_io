@@ -26,7 +26,7 @@ const onSubmit = async () => {
         if (resp.code === 200) {
             const flag = confirm(resp.message);
             if (flag) {
-                storageFn(data.token, data.uuid, data.refresh_token);
+                storageFn(data.token, data.refresh_token, data.uuid);
                 router.push('/');
             }
         }

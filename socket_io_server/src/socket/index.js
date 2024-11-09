@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-23 13:54:10
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-06 12:08:15
+ * @LastEditTime: 2024-11-09 10:28:02
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\socket\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -26,7 +26,6 @@ export function ioInit(httpServer) {
     // 两个不同的浏览器选项卡将具有两个不同的 ID
     // 服务器上没有为给定 ID 存储消息队列（即，如果客户端断开连接，则从服务器发送到此 ID 的消息将丢失）
     // console.log(socket.id);// 获取当前socket本身给定的id
-    // console.log(io.sockets.adapter.rooms); // 获取所有房间
     // console.log(socket.handshake.query); //拼接在连接url后面的参数
     // console.log(io.sockets.adapter.rooms.get(roomId));// 获取某个特定的房间
     // io.sockets.adapter.rooms.delete(id); // 删除某个房间
@@ -43,8 +42,8 @@ export function ioInit(httpServer) {
       // console.log(`reason-->`, reason);
       // socket.leave(socket.userId); // 将某个房间的特定的连接的websocket对象断开
       console.log(`socket:${socket.id} -- client disconnected`);
-      console.log(`${socket.userId} -- 断开了连接`);
-      console.log(`${socket.username} -- 断开了连接`);
+      console.log(`用户ID-->${socket.userId} -- 断开了连接`);
+      console.log(`用户名-->${socket.username} -- 断开了连接`);
       // console.log(`socket.userId:${socket.userId} -- client disconnected`);
       // 处理客户端断开连接后的逻辑
     });

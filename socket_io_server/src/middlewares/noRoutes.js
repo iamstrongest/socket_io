@@ -27,7 +27,7 @@ export const noRoutesFn = function (req, res, next) {
     });
   } else if (req.url.indexOf("/page") !== -1) {
     // 手动刷新页面，导致请求页面失败，进行重新发送index.html;
-    return res.sendFile(path.join(__dirname, "../public/page/index.html"));
+    // return res.sendFile(path.join(__dirname, "../public/page/index.html"));
   } else {
     next();
   }

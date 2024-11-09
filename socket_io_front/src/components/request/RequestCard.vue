@@ -1,7 +1,8 @@
 <script setup>
 import { handleFriendRequestList } from "@/utils/api/request"
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/socket";
+// import { socket } from "@/socket";
+import { getSocket } from "@/socket";
 const userStore = useUserStore();
 const props = defineProps({
     avatar: {
@@ -33,6 +34,7 @@ async function handleClick(status, id, conment) {
         type: 3,//处理申请
         status, receiveId: props.receiveId, sendId: props.sendId
     }
+    const socket = getSocket();
     socket.emit('send_notify', sendParams)
 }
 </script>

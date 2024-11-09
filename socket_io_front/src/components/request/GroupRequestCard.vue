@@ -2,7 +2,8 @@
 import { updateGroupRequest } from "@/utils/api/group_chat"
 import { useUserStore } from '@/stores/user';
 const userStore = useUserStore();
-import { socket } from "@/socket";
+// import { socket } from "@/socket";
+import { getSocket } from "@/socket";
 const props = defineProps({
     avatar: {
         default: null,

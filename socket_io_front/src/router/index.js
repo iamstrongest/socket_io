@@ -131,17 +131,17 @@ router.beforeEach((to, from, next) => {
   if (!router.hasRoute(to.name)) {
     return next(`/notFound?path=${to.fullpath || to.path}`);
   }
-  const needFresh = JSON.parse(sessionStorage.getItem("needFresh"));
-  if (to.name == "login" && from.name != undefined && !needFresh) {
-    sessionStorage.setItem("needFresh", true);
-  }
+  // const needFresh = JSON.parse(sessionStorage.getItem("needFresh"));
+  // if (to.name == "login" && from.name != undefined && !needFresh) {
+  //   sessionStorage.setItem("needFresh", true);
+  // }
   return next();
 });
-router.afterEach((to, from) => {
-  const needFresh = JSON.parse(sessionStorage.getItem("needFresh"));
-  if (to.name == "login" && from.name != undefined && needFresh) {
-    sessionStorage.setItem("needFresh", false);
-    window.location.reload();
-  }
-});
+// router.afterEach((to, from) => {
+//   const needFresh = JSON.parse(sessionStorage.getItem("needFresh"));
+//   if (to.name == "login" && from.name != undefined && needFresh) {
+//     sessionStorage.setItem("needFresh", false);
+//     window.location.reload();
+//   }
+// });
 export default router;

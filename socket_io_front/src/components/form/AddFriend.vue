@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 14:59:09
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 12:48:37
+ * @LastEditTime: 2024-11-09 10:07:18
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\form\AddFriend.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -11,7 +11,8 @@ import { reactive, computed, onMounted } from 'vue'
 import { addFriend } from "@/utils/api/user"
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/socket";
+import { getSocket } from "@/socket";
+// import { socket } from "@/socket";
 const userStore = useUserStore();
 const username = computed(() => userStore.user.info.username);
 const AddFriendForm = reactive({
@@ -43,6 +44,7 @@ const onSubmit = async () => {
         AddFriendForm.conment = '';
         if (resp.code === 200) {
             alert(resp.message)
+            const socket = getSocket();
             socket.emit("send_notify", socketData);//能够添加后，在发送通知
             // 跳转好友申请列表
             router.push('/chat/request');

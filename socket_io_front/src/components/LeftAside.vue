@@ -3,8 +3,10 @@ import { useRouter } from "vue-router";
 import { useNotifyStore } from "@/stores/notify"
 import { nextTick, ref } from "vue";
 import { useUserStore } from "@/stores/user";
-import { socket } from "@/socket";
 import { iconsAsideRoutes } from "@/config/constraint"
+// import { socket } from "@/socket";
+import { getSocket } from "@/socket";
+import { disConnectSocketFn } from "@/socket";
 const router = useRouter();
 const userStore = useUserStore();
 const notifyStore = useNotifyStore()
@@ -46,18 +48,18 @@ function stopResize() {
     window.removeEventListener('mousemove', resize);
     window.removeEventListener('mouseup', stopResize);
 }
+function disConnectSocketCallback() {
+    console.log("正在断开连接...");
+    userStore.resetUserInfo();
+    localStorage.clear();
+}
 function selectOption(params) {
     let { route, iconId } = params;
     if (iconId == 9) {
+        const socket = getSocket();
         socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username })
-        userStore.resetUserInfo();
-        localStorage.clear();
-        console.log("正在断开连接...");
-        socket.disconnect();// 主动断开连接,如果需要disconnect，则需要配合window.location.reload使用
-        // socket.close(); // 彻底关闭连接，包括停止心跳
-        // window.location.reload();
+        disConnectSocketFn(disConnectSocketCallback);
         router.push(route);
-
     }
     if (iconId == 6) {
         route = `${route}?id=${userStore.user.info.id}`;

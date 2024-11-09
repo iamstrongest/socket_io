@@ -84,7 +84,7 @@ async function refreshFn(url) {
   });
   return res;
 }
-export function storageFn(token, uuid, refresh_token) {
+export function storageFn(token, refresh_token,uuid ) {
   if (token) {
     localStorage.setItem("token", token);
   }

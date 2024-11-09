@@ -12,8 +12,8 @@ import path from "path";
 async function deploy() {
   const ssh = new NodeSSH();
   await ssh.connect(deployConfig); //连接的配置
-  const localDir = path.resolve(".", "../socket_io_server/src/config/ssl"); // 要自动化部署的前端目录
-  const remoteDir = "/usr/local/socket_io/socket_io_server/src/config/ssl/"; // 远程服务器目标目录
+  const localDir = path.resolve(".", "../socket_io_server/src/config/ssl_chat"); // 要自动化部署的前端目录
+  const remoteDir = "/usr/local/socket_io/socket_io_server/src/config/ssl_chat/"; // 远程服务器目标目录
   // 指定要排除的文件或目录
   const excludeFiles = ["node_modules"]; // 不需要上传的目录，可以根据需要修改,比如说node_modules
   // 检查目标目录是否存在，并在存在时删除

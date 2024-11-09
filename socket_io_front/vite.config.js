@@ -28,9 +28,9 @@ export default defineConfig(({ command, mode }) => {
         plugins: [loder_pxtovw],
       },
     },
-    base: "/page",
+    base: "/",
     build: {
-      outDir: path.resolve(__dirname, "../socket_io_server/src/public/page"), //打包路径,
+      outDir: path.resolve(__dirname, "../socket_io_server/src/public/"), //打包路径,
     },
     resolve: {
       alias: {

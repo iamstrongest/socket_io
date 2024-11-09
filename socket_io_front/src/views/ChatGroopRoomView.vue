@@ -9,7 +9,8 @@ import {
     deleteGroupUser
 } from "@/utils/api/group_chat"
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/socket";
+// import { socket } from "@/socket";
+import { getSocket } from "@/socket";
 import { throttle } from "@/utils/utilFn"
 import { useChatStore } from '@/stores/chat'
 import NoData from "@/components/NoData.vue"
@@ -89,6 +90,7 @@ function handleClick() {
         sendIdAvatar
     });
     chatStore.updateRoomList({ roomId, conment, updatedAt: date });
+    const socket = getSocket();
     socket.emit("send_group_chat", params);
     nextTick(() => {
         editableDivRef.value.innerText = "";
@@ -105,7 +107,7 @@ async function addData(params) {
     return data;
 }
 async function callback(event) {
-    if (event.target?.scrollTop < 10) {
+    if (event.target?.scrollTop < 10 && page.value <= totalPage.value) {
         const roomId = route.params.roomId;
         const params = { roomId: roomId, page: page.value };
         const data = await addData(params);
@@ -202,6 +204,7 @@ async function clickHandle(event, params) {
             sendIdUsername,
             sendIdAvatar,
         });
+        const socket = getSocket();
         socket.emit("send_group_chat", chatParams);
         return;
     }

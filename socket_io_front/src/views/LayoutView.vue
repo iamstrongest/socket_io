@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-06 11:00:54
+ * @LastEditTime: 2024-11-09 11:19:07
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,13 +10,15 @@
 import { onBeforeMount, onMounted, watch, onUnmounted, inject } from 'vue';
 import { useUserStore } from "@/stores/user.js"
 import { useNotifyStore } from "@/stores/notify";
+import { useChatStore } from '@/stores/chat';
 import { RouterView } from 'vue-router';
 import LeftAside from "@/components/LeftAside.vue"
-import { socket } from "@/socket";
+import { getSocket } from "@/socket";
 import { requestPermission } from "@/utils/notification"
 import Footer from "@/components/Footer.vue"
 const notifyStore = useNotifyStore();
 const userStore = useUserStore();
+const chatStore = useChatStore();
 // const scrollFn = inject('scrollFn');
 // 请求权限
 // 发送通知
@@ -42,7 +44,7 @@ function sendNotification(data) {
         window.focus(); // 点击通知时使窗口获得焦点
     };
 }
-function logout(event) {
+function logout(socket) {
     socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username });
 }
 onBeforeMount(async () => {
@@ -57,6 +59,7 @@ watch(() => userStore.user?.info?.theme, (newValue, oldValue) => {
 onMounted(async () => {
     window.document.documentElement.setAttribute('data-theme', userStore.user.info.theme || 'light')
     // window.addEventListener("beforeunload", logout);//刷新或者直接退出浏览器，可以给提示
+    const socket = getSocket();
     socket.on("friend_login", (data) => {
         const notification = new Notification("好友上线通知", {
             body: data.msg,
@@ -92,6 +95,24 @@ onMounted(async () => {
         }
         // tonePlayerRef.value.playTone()
     })
+    socket.on("single_receive", (data) => {
+        if (chatStore.activeRoomId === data.roomId) {
+            chatStore.addAfterChat(data);
+        }
+        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
+    });
+    socket.on("group_receive", (data) => {
+        if (chatStore.activeRoomId === data.roomId) {
+            chatStore.addAfterChat(data);
+            if (data.deleteId) {
+                chatStore.deleteGroupRoomUserFn(data.deleteId);
+            }
+            if (data.addUser) {
+                chatStore.addUserAfter(data);
+            }
+        }
+        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
+    });
 });
 onUnmounted(() => {
     userStore.resetUserInfo();

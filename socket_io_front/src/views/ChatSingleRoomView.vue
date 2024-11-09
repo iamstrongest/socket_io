@@ -11,7 +11,8 @@ import { onMounted, ref, computed, useTemplateRef, nextTick, onBeforeUnmount, wa
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { getChat } from "@/utils/api/chat"
 import { useUserStore } from '@/stores/user';
-import { socket } from "@/socket";
+// import { socket } from "@/socket";
+import { getSocket } from "@/socket";
 import { throttle } from "@/utils/utilFn"
 import { useChatStore } from '@/stores/chat'
 const route = useRoute();
@@ -75,6 +76,7 @@ function handleClick() {
         sendIdAvatar
     });
     chatStore.updateRoomList({ roomId, conment, updatedAt });
+    const socket = getSocket();
     socket.emit("send_single_chat", params);
     nextTick(() => {
         editableDivRef.value.innerText = "";
@@ -84,7 +86,7 @@ function handleClick() {
 async function addData(params) {
     const { data: resp } = await getChat(params);
     const { data } = resp;
-    totalPage.value = resp.totalPage;
+    totalPage.value = Number(resp.totalPage);
     if (data.length == 0) {
         alert(resp.message);
     }
@@ -94,7 +96,7 @@ async function addData(params) {
     return data;
 }
 async function callback(event) {
-    if (event.target?.scrollTop < 10) {
+    if (event.target?.scrollTop < 10 && page.value <= totalPage.value) {
         const roomId = route.params.roomId;
         const params = { roomId: roomId, page: page.value };
         const data = await addData(params);

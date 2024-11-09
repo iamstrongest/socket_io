@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-01-06 23:26:44
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-01 17:20:53
+ * @LastEditTime: 2024-11-09 11:36:18
  * @FilePath: \Front-end\uni-app\uni-project\REMADE.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -97,6 +97,37 @@ npm run start:pm2
 1. 浏览器地址栏会出现安装的标志，允许安装即可
 2. 要使 Web 应用程序可安装，它必须在安全上下文中提供。通常意味着它必须通过 HTTPS 提供。本地资源，如 localhost、127.0.0.1 和 file:// 也被视为安全。
 3. 暂时不引用service-worker技术
+4.特殊说明 manifest.json文件配置
+```json
+{
+  "name": "爱聊",
+  "icons": [
+    {
+      "src": "/page/chat.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "一个基于PWA技术的聊天软件"
+}
+```
+当你部署上线服务器后,src地址,必须与你图片地址一致，比如打包后，你静态资源图片地址是/img/chat.png,
+那么必须在你部署前，更改开发时候的src地址，也就是说开发环境是开发环境对应的src地址，部署环境是部署环境对应的src地址
+```json
+  "icons": [
+    {
+      "src": "/img/chat.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+```
+#### socket 解读
+当你监听事件时，一定要注意***on("thing",(data)=>{})的用法***
+如果你不是放在根页面下(**根页面不会多次生成与销毁，只有关闭浏览器或者进行页面刷新**)，你如果放在子页面中(**比如 /chat,而/chat是/的子路由，当你切换到/user，又切换到/chat,就会再生成一次监听事件，切换几次来回，就会生成多个on("thing",(data)=>{})是事件**)，你的每次切换页面，然后再进入到你放置on的子页面中，就会多次生成on("thing",(data)=>{})事件(切换几次，就生成几次，导致信息重复添加，这与后端无关)
 #### 压测接口
 全局安装 autocannon
 ```sh
@@ -280,6 +311,9 @@ commitToGit();
 8. 是否需要重新启动服务器？ 没有修改后端的配置，是不需要重新启动的，服务器会自动判断当前资源有误做修改
 9. 自动化部署上传文件到远程服务器，慢是正常的，请不要终止
 10. 自动化上传文件到git，首先需要你将这个项目于git关联了，如果没有关联，需要你手动进行关联
+11. PWA 开发环境url和部署环境url需特别注意
+12. socket 的 on 事件，一定要在页面中出现的位置得当，不然可能会重复生成多个，监听多次，你可以用console.log()调试看看结果
+13. 当你把前端项目部署在nginx服务器而不是node服务器时，需要修改nginx的配置，比如 refresh_token请求头是传递不到后端接口，但是axios发出的请求头明明有这个字段。这是因为nginx的进行了转发代理原因，不会主动识别 _这个符号，你需要打开对应的语句
 ``` sh
 git init
 git remote add origin https://github.com/dsdjkjas/socket.io.git
