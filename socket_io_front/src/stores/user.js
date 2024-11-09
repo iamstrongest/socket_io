@@ -23,28 +23,14 @@ export const useUserStore = defineStore("userinfo", () => {
     user.info = data;
     if (user.info.id) {
       const socket = getSocket();
-      // 手动检查连接状态
-      if (socket) {
-        //登录后，手动再次进入登录页面后(不在进行登录)
-        //手动刷新，有时候不执行connect事件，
-        //connected连接状态是true，因此需要再次出发login事件，让后端socket重新挂载userId
-        console.log("重新连接...");
+      socket.on("connect", () => {
+        //只会执行一次
+        console.log("连接成功");
         socket.emit("login", {
           id: user.info.id,
           username: user.info.username,
         });
-      } else {
-        createSocketFn();
-        const socket = getSocket();
-        socket.on("connect", () => {
-          //只会执行一次
-          console.log("连接成功");
-          socket.emit("login", {
-            id: user.info.id,
-            username: user.info.username,
-          });
-        });
-      }
+      });
     }
   }
   async function updateGetUserInfo() {
