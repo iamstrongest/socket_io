@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 11:27:51
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-30 13:47:56
+ * @LastEditTime: 2024-11-15 14:05:11
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\config\constraint.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -41,6 +41,7 @@ export const httpCode = {
   431: "已经提交过申请了，待管理人员处理申请",
   432: "暂无权限或非法操作,不能取消/新增管理员",
   433: "暂无权限或非法操作，退出群聊失败",
+  441: "缺少必要参数",
 };
 const data = {};
 switch (process.env.NODE_ENV) {
@@ -49,7 +50,7 @@ switch (process.env.NODE_ENV) {
     // 本地服务器服务器图片上传地址(预览)
     data.publicPath = "http://localhost:3030";
     data.message = `Express server running at http://127.0.0.1:3030`;
-    data.hosts = [`127.0.0.1:3030`, `localhost:3030`];
+    data.hosts = [`127.0.0.1`, `localhost`];
     data.socketOrigin = "http://localhost:5175";
     break;
   case "https_devlopment":
@@ -57,7 +58,7 @@ switch (process.env.NODE_ENV) {
     // 本地服务器服务器图片上传地址(预览)
     data.publicPath = "https://localhost:3030";
     data.message = `Express server running at https://127.0.0.1:3030`;
-    data.hosts = [`127.0.0.1:3030`, `localhost:3030`];
+    data.hosts = [`127.0.0.1`, `localhost`];
     data.socketOrigin = "https://localhost:5175";
     break;
   case "http_preview":
@@ -65,7 +66,7 @@ switch (process.env.NODE_ENV) {
     // 本地服务器服务器图片上传地址(预览)
     data.publicPath = "http://localhost:3033";
     data.message = `Express server running at http://127.0.0.1:3033`;
-    data.hosts = [`127.0.0.1:3033`, `localhost:3033`];
+    data.hosts = [`127.0.0.1`, `localhost`];
     data.socketOrigin = "http://localhost:3033";
     break;
   case "https_preview":
@@ -73,7 +74,7 @@ switch (process.env.NODE_ENV) {
     // 本地服务器服务器图片上传地址(预览)
     data.publicPath = "https://localhost:3033";
     data.message = `Express server running at https://127.0.0.1:3033`;
-    data.hosts = [`127.0.0.1:3033`, `localhost:3033`];
+    data.hosts = [`127.0.0.1`, `localhost`];
     data.socketOrigin = "https://localhost:3033";
     break;
   case "http_production":
@@ -81,15 +82,15 @@ switch (process.env.NODE_ENV) {
     // 远程服务器服务器图片上传地址(没有ssl证书或者域名的情况)
     data.publicPath = "http://121.43.11.11:3333";
     data.message = `Express server running at http://121.43.11.11:3333/page`;
-    data.hosts = [`121.43.11.11:3333`, `http://wiiind-cool123.top:3333`];
+    data.hosts = [`121.43.11.11`, `wiiind-cool123.top:3333`];
     data.socketOrigin = "http://121.43.11.11:3333";
     break;
   case "https_production":
     data.httpPort = 443;
-    data.publicPath = "https://wind1u-cooly.top:443";
-    data.message = `Express server running at https://wind-coqewol.top:443/page`;
-    data.hosts = [`121.43.11.11:443`, `https://wiqand-coolqsa.top:443`];
-    data.socketOrigin = "https://win13d-coodlsds.top:443";
+    data.publicPath = "https://wind1u-cooly.top";
+    data.message = `Express server running at https://wind-coqewol.top`;
+    data.hosts = [`121.43.11.11`, `wiqand-coolqsa.top`];
+    data.socketOrigin = "https://win13d-coodlsds.top";
     break;
 }
 export const serverConfig = data;

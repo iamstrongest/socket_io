@@ -425,7 +425,7 @@ export const getGroupRequestListFn = async function (params) {
   data.sort(function (a, b) {
     return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
   });
-  let filterId = 1;
+  let keyId = 1;
   for await (const item of data) {
     // 处理申请群聊请求
     const sql = `SELECT * FROM user where id=?`;
@@ -453,10 +453,10 @@ export const getGroupRequestListFn = async function (params) {
         });
       });
     }
-    item.filterId = filterId;
-    filterId++;
+    item.keyId = keyId;
+    keyId++;
   }
-  filterId = null;
+  keyId = null;
   const result = {
     code: 200,
     message: "查找群聊申请列表",

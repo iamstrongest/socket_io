@@ -269,7 +269,7 @@ onUnmounted(() => {
             <template v-if="activeSelectId === 1">
                 <div class="frind hover" v-for="(item) of showList" :key="item.roomId"
                     @click="jump(item.roomId, item.id)" @contextmenu="(event) => menuFn(event, item.id)">
-                    <img :src="item.avatar" alt="用户头像" title="用户头像">
+                    <img :src="item.avatar" alt="用户头像" title="用户头像" loading="lazy">
                     <strong :title="item.username">{{ item.username }}</strong>
                     <div v-if="activeId === item.id" ref="customMenuRef" id="customMenu">
                         <ul>

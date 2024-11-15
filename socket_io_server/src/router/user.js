@@ -13,13 +13,15 @@ import {
   getAllUserDetailController,
   updateAvatarController,
   updateUserinfoController,
-  refreshController
+  refreshController,
 } from "../controller/user.js";
+import middlewares from "../middlewares/index.js";
 import { registerForm, updateAvatar } from "../config/form.js";
 
 export const registRoute = router.post(
   "/register",
   registerForm,
+  middlewares.checkSpecialParamsFn,
   registController
 );
 export const loginRoute = router.post("/login", loginController);
@@ -33,6 +35,7 @@ export const updateUserinfoRoute = router.put(
 export const updateAvatarRoute = router.put(
   "/avatar",
   updateAvatar,
+  middlewares.checkSpecialParamsFn,
   updateAvatarController
 );
 export const addFriendRoute = router.post("/friend", addFriendController);

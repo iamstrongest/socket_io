@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 17:49:23
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-04 10:43:52
+ * @LastEditTime: 2024-11-12 10:11:59
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\config\constraint.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -96,6 +96,7 @@ export const httpCode = {
   431: "已经提交过申请了，待管理人员处理申请",
   432: "暂无权限或非法操作,不能取消/新增管理员",
   433: "暂无权限或非法操作，退出群聊失败",
+  441: "缺少必要参数",
 };
 export const chatListType = {
   "-1": {

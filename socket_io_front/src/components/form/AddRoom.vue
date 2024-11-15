@@ -101,6 +101,6 @@ form {
 input {
     width: 200px;
     height: 40px;
-    border-radius: 3px;
+    border-radius: 20px;
 }
 </style>

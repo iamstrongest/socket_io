@@ -16,6 +16,7 @@ export default [
   "/api/userinfo",
   "/api/friend",
   "/api/detail",
+  "/api/avatar",
   "/api/alluser",
   "/api/refresh",
   "/api/register",

@@ -40,6 +40,7 @@ async function uploadHandle() {
     const { data: resp } = await updateAvatarFn(formData);
     if (resp.code === 200) {
         await userStore.updateGetUserInfo();
+        alert(resp.message);
     }
 }
 async function submitHandle() {

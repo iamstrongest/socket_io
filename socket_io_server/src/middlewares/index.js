@@ -12,6 +12,7 @@ import { serverErrorFn } from "./error.js";
 import { noRoutesFn } from "./noRoutes.js";
 import { cacheFn } from "./cache.js";
 import { proxyFn } from "./proxy.js";
+import { checkNoramlParamsFn, checkSpecialParamsFn } from "./api.params.js";
 export default {
   cacheFn,
   authFn,
@@ -19,4 +20,6 @@ export default {
   serverErrorFn,
   noRoutesFn,
   proxyFn,
+  checkNoramlParamsFn,
+  checkSpecialParamsFn,
 };

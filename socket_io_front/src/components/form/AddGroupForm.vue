@@ -38,6 +38,7 @@ const onSubmit = async () => {
         const { data: resp } = response;
         props.confirmFn && props.confirmFn(resp.data.roomId);
         roomName.value = '';
+        alert(resp.message);
     } catch (error) {
         console.error('上传失败:', error);
     }
@@ -143,6 +144,6 @@ form {
 input {
     width: 200px;
     height: 40px;
-    border-radius: 3px;
+    border-radius: 20px;
 }
 </style>

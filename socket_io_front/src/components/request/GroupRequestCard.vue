@@ -22,7 +22,7 @@ const props = defineProps({
         default: null,
         type: Number || null,
     },
-    roomId: Number||String,
+    roomId:String,
     roomName: String
 })
 const emits = defineEmits(['handleClickEmit']);
@@ -48,7 +48,7 @@ async function handleClick(status) {
 <template>
     <div class="request-card-container">
         <div v-if="props.avatar" class="avatar">
-            <img :src="props.avatar" alt="申请者照片">
+            <img :src="props.avatar" alt="申请者照片" loading="lazy">
             <span>群名:{{ props.roomName }}</span>
         </div>
         <div class="info">

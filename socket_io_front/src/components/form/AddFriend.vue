@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 14:59:09
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-09 10:07:18
+ * @LastEditTime: 2024-11-12 11:43:42
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\form\AddFriend.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -111,7 +111,7 @@ const onSubmit = async () => {
 input {
     width: 200px;
     height: 40px;
-    border-radius: 3px;
+    border-radius: 20px;
 }
 
 textarea {

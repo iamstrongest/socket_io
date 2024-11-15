@@ -316,7 +316,7 @@ onBeforeUnmount(() => {
             </div>
             <div class="group-user-info-tontainer" v-for=" user in showUserList" :key="user.joinId"
                 @contextmenu="(event) => menuFn(event, user.joinId)">
-                <img :src="user.avatar" alt="用户头像">
+                <img :src="user.avatar" alt="用户头像" loading="lazy">
                 <div class="group-user-info-tontainer-right">
                     <div class="username" :title="user.username">{{ user.username }}</div>
                     <!-- 1为群主 2为管理员 3为普通群众 -->

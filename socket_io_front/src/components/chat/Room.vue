@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 10:51:22
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-06 15:44:45
+ * @LastEditTime: 2024-11-12 10:30:33
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\components\chat\ChatList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -101,7 +101,7 @@ function stopResize() {
                 :class="{ active: chatStore.chatActive == item.roomId }"
                 @click="jump(item.chatRoomType, item.roomId, item.roomId, item.showUserId)">
                 <div>
-                    <img :src="item.avatar" alt="用户头像" title="用户头像">
+                    <img :src="item.avatar" alt="用户头像" title="用户头像" loading="lazy">
                 </div>
                 <div class="right-info">
                     <strong v-if="item.chatRoomType == 1" :title="item.username">{{ item.username }}</strong>

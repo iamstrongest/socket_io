@@ -47,14 +47,32 @@ function sendNotification(data) {
 function logout(socket) {
     socket.emit('logout', { id: userStore.user.info.id, username: userStore.user.info.username });
 }
-onBeforeMount(async () => {
-    await userStore.setUserInfo();
-    await notifyStore.setNotifiy();
-})
+function groupReceive(data) {
+    if (chatStore.activeRoomId === data.roomId) {
+        chatStore.addAfterChat(data);
+        if (data.deleteId) {
+            chatStore.deleteGroupRoomUserFn(data.deleteId);
+        }
+        if (data.addUser) {
+            chatStore.addUserAfter(data);
+        }
+    }
+    chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
+}
+function singleReceive(data) {
+    if (chatStore.activeRoomId === data.roomId) {
+        chatStore.addAfterChat(data);
+    }
+    chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
+}
 watch(() => userStore.user?.info?.theme, (newValue, oldValue) => {
     if (newValue) {
         window.document.documentElement.setAttribute('data-theme', newValue);
     }
+})
+onBeforeMount(async () => {
+    await userStore.setUserInfo();
+    await notifyStore.setNotifiy();
 })
 onMounted(async () => {
     window.document.documentElement.setAttribute('data-theme', userStore.user.info.theme || 'light')
@@ -95,24 +113,8 @@ onMounted(async () => {
         }
         // tonePlayerRef.value.playTone()
     })
-    socket.on("single_receive", (data) => {
-        if (chatStore.activeRoomId === data.roomId) {
-            chatStore.addAfterChat(data);
-        }
-        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
-    });
-    socket.on("group_receive", (data) => {
-        if (chatStore.activeRoomId === data.roomId) {
-            chatStore.addAfterChat(data);
-            if (data.deleteId) {
-                chatStore.deleteGroupRoomUserFn(data.deleteId);
-            }
-            if (data.addUser) {
-                chatStore.addUserAfter(data);
-            }
-        }
-        chatStore.updateRoomList({ roomId: data.roomId, conment: data.conment, updatedAt: data.updatedAt });
-    });
+    socket.on("single_receive", singleReceive);
+    socket.on("group_receive", groupReceive);
 });
 onUnmounted(() => {
     userStore.resetUserInfo();

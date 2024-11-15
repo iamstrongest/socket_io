@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 10:52:17
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-03 12:01:13
+ * @LastEditTime: 2024-11-12 10:49:46
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\FriendRequestListView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -70,7 +70,7 @@ async function getGroupRequestListFn(params) {
       </RequestCard>
     </div>
     <div class="datalist" v-if="requestList.length > 0 && activeSelectId == 2">
-      <GroupRequestCard v-for="item of requestList" :key="item.id" :id="item.id" :conment="item.conment"
+      <GroupRequestCard v-for="item of requestList" :key="item.keyId" :id="item.id" :conment="item.conment"
         :roomName="item.roomName" :canHandle="item.canHandle" :handleUsername="item.handleUsername"
         :joinId="item.joinId" :roomId="item.roomId" :avatar="item.avatar" :status="item.status"
         @handleClickEmit="changeStatus">

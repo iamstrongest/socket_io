@@ -42,6 +42,9 @@ const onSubmit = async () => {
         registerForm.email = '';
         registerForm.password = '';
         registerForm.username = '';
+        if (response.data.code == 200) {
+            alert(response.data.message);
+        }
     } catch (error) {
         console.error('上传失败:', error);
     }
@@ -72,8 +75,8 @@ const onChange = (event) => {
                 </label>
             </div>
             <div class="form_col">
-                <label for="password"> <span>昵称: </span><input type="text" v-model="registerForm.username" id="password"
-                        name="password" placeholder="输入昵称"> </label>
+                <label for="username"> <span>昵称: </span><input type="text" v-model="registerForm.username" id="username"
+                        name="username" placeholder="输入昵称"> </label>
             </div>
             <div class="form_col">
                 <label for="email"> <span>注册邮箱: </span><input type="email" v-model="registerForm.email" id="email"
@@ -156,6 +159,6 @@ const onChange = (event) => {
 input {
     width: 200px;
     height: 40px;
-    border-radius: 3px;
+    border-radius: 20px;
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-01-06 23:26:44
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-09 11:36:18
+ * @LastEditTime: 2024-11-12 11:40:12
  * @FilePath: \Front-end\uni-app\uni-project\REMADE.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -127,7 +127,20 @@ npm run start:pm2
 ```
 #### socket 解读
 当你监听事件时，一定要注意***on("thing",(data)=>{})的用法***
-如果你不是放在根页面下(**根页面不会多次生成与销毁，只有关闭浏览器或者进行页面刷新**)，你如果放在子页面中(**比如 /chat,而/chat是/的子路由，当你切换到/user，又切换到/chat,就会再生成一次监听事件，切换几次来回，就会生成多个on("thing",(data)=>{})是事件**)，你的每次切换页面，然后再进入到你放置on的子页面中，就会多次生成on("thing",(data)=>{})事件(切换几次，就生成几次，导致信息重复添加，这与后端无关)
+如果你不是放在根页面下(**根页面不会多次生成与销毁，只有关闭浏览器或者进行页面刷新**)，你如果放在子页面中(**比如 /chat,而/chat是/的子路由，当你切换到/user，又切换到/chat,就会再生成一次监听事件，切换几次来回，就会生成多个on("thing",(data)=>{})是事件**)，你的每次切换页面，然后再进入到你放置on的子页面中，就会多次生成on("thing",(data)=>{})事件(切换几次，就生成几次，导致信息重复添加，这与后端无关)。如果想要在子页面中使用，那么需要在页面销毁前，将事件移除，使用**socket.off("thing", listener);listener是监听的函数，如果不写listener，则会把所有thing的事件给移除**
+```js
+// Chat.vue
+function chatCallback(data){
+  
+}
+onMounted(()=>{
+
+socket.on("receive_chat",chatCallback)
+})
+onUnMounted(()=>{
+  socket.off("receive_chat",chatCallback)
+})
+```
 #### 压测接口
 全局安装 autocannon
 ```sh

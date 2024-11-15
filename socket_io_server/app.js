@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-26 08:46:03
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-09 14:13:24
+ * @LastEditTime: 2024-11-12 10:57:13
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,23 +19,21 @@ import "./src/db/index.js";
 import routes from "./src/router/index.js";
 import middlewares from "./src/middlewares/index.js";
 import { ioInit } from "./src/socket//index.js";
-import { credentials } from "./src/config/ssl/index.js";
+import { credentials } from "./src/config/ssl_chat/index.js";
 import cluster from "node:cluster";
 import { availableParallelism } from "node:os";
 import process from "node:process";
 //app.use(cors());
-
 app.use(express.json({ extended: true, limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
 // 静态资源目录
 app.use(express.static("./src/public"));
 app.use(middlewares.cacheFn);
 app.use(middlewares.proxyFn);
-// 解析 POST 提交过来的表单数据
-
 app.use(middlewares.authFn);
 app.use(middlewares.validateFn);
 app.use(middlewares.noRoutesFn);
+app.use(middlewares.checkNoramlParamsFn);
 app.use(routes);
 app.use(middlewares.serverErrorFn);
 // 根据不同的环境指令，启动服务器

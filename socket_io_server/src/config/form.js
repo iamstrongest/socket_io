@@ -10,11 +10,17 @@ import multer from "multer"; //解析上传的文件
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import fs from "fs";
 // 获取当前目录名
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 //原始上传过来的文件资源存放地
 const upload = multer({ dest: path.resolve(__dirname, "../tmp/") }); //会在此目录下生成一个二进制文件，可以直接给img元素赋值
+
+if (!fs.existsSync(path.resolve(__dirname, "../tmp"))) {
+  fs.mkdirSync(dirname);
+}
+
 export const registerForm = upload.fields([
   { name: "file" },
   { name: "timestamp" },

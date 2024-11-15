@@ -20,7 +20,7 @@ onBeforeMount(async () => {
 <template>
     <div class="all-user-container" v-if="userList.length > 0">
         <div v-for="user of userList" :key="user.id">
-            <img :src="user.avatar" alt="用户头像">
+            <img :src="user.avatar" alt="用户头像" loading="lazy">
             <div>
                 <div>
                     <span>id:{{ user.id }}</span>

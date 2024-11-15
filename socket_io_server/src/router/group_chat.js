@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-30 22:51:29
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-02 10:35:26
+ * @LastEditTime: 2024-11-11 23:55:19
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\router\group_chat.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -26,6 +26,7 @@ import {
   updateGroupRequestController,
   getGroupRequestListController,
 } from "../controller/group_chat.js";
+import middlewares from "../middlewares/index.js";
 export const getGroupChatRoute = router.get(
   "/groupchat",
   getGroupChatController
@@ -53,6 +54,7 @@ export const getGroupRoomUserRoute = router.get(
 export const addGroupRoomRoute = router.post(
   "/grouproom",
   createGroupRoomForm,
+  middlewares.checkSpecialParamsFn,
   createGroupRoomController
 );
 export const addGroupRoomUserRoute = router.post(

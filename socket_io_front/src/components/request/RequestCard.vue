@@ -41,7 +41,7 @@ async function handleClick(status, id, conment) {
 <template>
     <div class="request-card-container">
         <div v-if="props.avatar" class="avatar">
-            <img :src="props.avatar" alt="申请者照片">
+            <img :src="props.avatar" alt="申请者照片" loading="lazy">
         </div>
         <div class="info">
             <h3 :title="props.username">{{ props.username }}</h3>
