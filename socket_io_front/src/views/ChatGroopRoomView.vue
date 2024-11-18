@@ -107,7 +107,7 @@ async function addData(params) {
     return data;
 }
 async function callback(event) {
-    if (page.value > totalPage.value) {
+    if (event.target?.scrollTop < 10 && page.value > totalPage.value) {
         return alert("没有更多聊天信息了");
     }
     if (event.target?.scrollTop < 10 && page.value <= totalPage.value) {
