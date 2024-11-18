@@ -101,12 +101,15 @@ async function addData(params) {
     const { data: resp } = await getGroupRoomChatList(params);
     const { data } = resp;
     totalPage.value = resp.totalPage;
-    if (page.value < totalPage.value) {
+    if (page.value <= totalPage.value) {
         page.value++;
     }
     return data;
 }
 async function callback(event) {
+    if (page.value > totalPage.value) {
+        return alert("没有更多聊天信息了");
+    }
     if (event.target?.scrollTop < 10 && page.value <= totalPage.value) {
         const roomId = route.params.roomId;
         const params = { roomId: roomId, page: page.value };

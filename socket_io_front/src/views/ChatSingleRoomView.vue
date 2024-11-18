@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-22 11:11:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-05 21:20:43
+ * @LastEditTime: 2024-11-18 14:13:26
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\views\ChatSingleRoomView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -90,12 +90,15 @@ async function addData(params) {
     if (data.length == 0) {
         alert(resp.message);
     }
-    if (page.value < totalPage.value) {
+    if (page.value <= totalPage.value) {
         page.value++;
     }
     return data;
 }
 async function callback(event) {
+    if (page.value > totalPage.value) {
+        return alert("没有更多聊天信息了");
+    }
     if (event.target?.scrollTop < 10 && page.value <= totalPage.value) {
         const roomId = route.params.roomId;
         const params = { roomId: roomId, page: page.value };
