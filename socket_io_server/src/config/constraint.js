@@ -2,7 +2,15 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 11:27:51
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-15 14:05:11
+ * @LastEditTime: 2024-11-24 19:03:42
+ * @FilePath: \socket_io\socket_io_server\src\config\constraint.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+/*
+ * @Author: strongest-qiang 1309148358@qq.com
+ * @Date: 2024-10-20 11:27:51
+ * @LastEditors: strongest-qiang 1309148358@qq.com
+ * @LastEditTime: 2024-11-24 18:56:45
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_server\src\config\constraint.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -97,19 +105,27 @@ switch (process.env.NODE_ENV) {
 export const serverConfig = data;
 export const secretKey = "strongest ^0^";
 export const geolocation = {
-  // 打卡范围（单位：米）
-  allowedRadius: 200,
+  // 统一打卡范围（单位：米），作为扩展
+  allowedRadius: 1000,
   // 可以进行打卡的经纬度地点
   positions: [
-    // 渝水一小经纬度坐标
+    // 一小经纬度坐标
     {
       targetLatitude: 27.8023,
       targetLongitude: 114.931,
+      allowedRadius: 1000,
     },
     // 青少年宫经纬度坐标
     {
       targetLatitude: 27.8183,
       targetLongitude: 114.9332,
+      allowedRadius: 1000,
+    },
+    // 江西师范大学青山湖校区
+    {
+      targetLatitude: 28.6533,
+      targetLongitude: 115.8617,
+      allowedRadius: 1500,
     },
   ],
 };

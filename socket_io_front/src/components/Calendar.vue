@@ -166,6 +166,7 @@ onMounted(async () => {
 }
 
 .my-calendar {
+  font-size: 14px;
   color: #000;
 }
 
