@@ -176,28 +176,28 @@ onMounted(async () => {
 }
 
 .day {
-  margin-bottom: 0.5rem;
+  margin-bottom: 2px;
 }
 
 .absence {
   display: inline-block;
-  width: 2rem;
+  width: 32px;
   text-align: center;
   margin-top: 2px;
   color: red;
   border: 1px solid #ccc;
-  border-radius: 0.2rem;
+  border-radius: 2px;
   box-shadow: 1px 1px 1px black;
 }
 
 .check {
   display: inline-block;
-  width: 3rem;
+  width: 48px;
   text-align: center;
   margin-top: 2px;
   color: skyblue;
   border: 1px solid #ccc;
-  border-radius: 0.2rem;
+  border-radius: 2px;
   box-shadow: 1px 1px 1px black;
 }
 </style>
