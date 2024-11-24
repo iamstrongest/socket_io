@@ -117,7 +117,7 @@ function stopResize() {
 <style scoped>
 .chatList-container {
     width: 150px;
-    height: 95vh;
+    height: 100vh;
     padding: 1px;
     position: relative;
     box-sizing: border-box;

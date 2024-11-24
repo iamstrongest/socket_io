@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-09 11:19:07
+ * @LastEditTime: 2024-11-24 12:37:21
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -127,7 +127,7 @@ onUnmounted(() => {
             <RouterView></RouterView>
         </div>
     </main>
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
 </template>
 
 <style scoped>

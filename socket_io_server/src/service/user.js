@@ -9,6 +9,10 @@ import {
   getAllUserDetailFn,
   updateAvatarFn,
   updateUserinfoFn,
+  getAttendanceFn,
+  insertAttendanceFn,
+  getUserAttendanceFn,
+  absenceFn,
 } from "../dao/user.js";
 import { serverConfig } from "../config/constraint.js";
 import path from "path";
@@ -159,5 +163,41 @@ export const updateAvatarService = async function (params) {
  */
 export const updateUserinfoService = async function (req) {
   const result = await updateUserinfoFn(req);
+  return result;
+};
+/**
+ *
+ * @param {*} req { userId:string[用户id], attendance_year_month:string[年限和月份]}
+ * @returns
+ */
+export const getAttendanceService = async function (req) {
+  const result = await getAttendanceFn(req);
+  return result;
+};
+/**
+ *
+ * @param {*}req { userId:string[用户id]，userLatitude:number [维度],userLongitude:number [经度]}
+ * @returns
+ */
+export const insertAttendanceService = async function (req) {
+  const result = await insertAttendanceFn(req);
+  return result;
+};
+/**
+ *
+ * @param {*} req { userId:string[用户id], attendance_year_month:string[年限和月份]}
+ * @returns
+ */
+export const getUserAttendanceService = async function (req) {
+  const result = await getUserAttendanceFn(req);
+  return result;
+};
+/**
+ *
+ * @param {*}req { userId:string[用户id],description:string[打卡说明]}
+ * @returns
+ */
+export const absenceService = async function (req) {
+  const result = await absenceFn(req);
   return result;
 };

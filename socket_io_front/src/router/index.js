@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 10:40:30
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-06 15:13:17
+ * @LastEditTime: 2024-11-24 11:43:17
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\router\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -92,6 +92,14 @@ const router = createRouter({
             needAuth: true,
           },
           component: () => import("@/views/EditUserView.vue"),
+        },
+        {
+          path: "attendance",
+          name: "attendance",
+          meta: {
+            needAuth: true,
+          },
+          component: () => import("@/views/AttendanceView.vue"),
         },
         {
           path: "alluser",

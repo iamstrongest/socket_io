@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 17:49:23
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-12 10:11:59
+ * @LastEditTime: 2024-11-24 12:23:59
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\config\constraint.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -52,6 +52,12 @@ export const iconsAsideRoutes = [
         iconId: 8,
         title: "注册列表",
       },
+      {
+        class: "#icon-waichukaoqin",
+        route: "/attendance",
+        iconId: 14,
+        title: "考勤记录",
+      },
       { class: "#icon-tuichu", iconId: 9, route: "/login", title: "退出登录" },
     ],
   },
@@ -80,6 +86,7 @@ export const httpCode = {
   403: "不存在该路由，你怕是请求了个寂寞",
   405: "线上环境禁止代理，只能进行原网站访问",
   406: "刷新token失效,请重新登陆",
+  411: "您不在打卡范围内，无法打卡",
   418: "账号或密码错误",
   419: "用户不存在",
   420: "用户已经注册，请重新选择用户名",

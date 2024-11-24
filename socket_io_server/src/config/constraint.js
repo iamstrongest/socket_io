@@ -25,6 +25,7 @@ export const httpCode = {
   403: "不存在该路由，你怕是请求了个寂寞",
   405: "线上环境禁止代理，只能进行原网站访问",
   406: "刷新token失效,请重新登陆",
+  411: "您不在打卡范围内，无法打卡",
   418: "账号或密码错误",
   419: "用户不存在",
   420: "用户已经注册，请重新选择用户名",
@@ -95,3 +96,20 @@ switch (process.env.NODE_ENV) {
 }
 export const serverConfig = data;
 export const secretKey = "strongest ^0^";
+export const geolocation = {
+  // 打卡范围（单位：米）
+  allowedRadius: 200,
+  // 可以进行打卡的经纬度地点
+  positions: [
+    // 渝水一小经纬度坐标
+    {
+      targetLatitude: 27.8023,
+      targetLongitude: 114.931,
+    },
+    // 青少年宫经纬度坐标
+    {
+      targetLatitude: 27.8183,
+      targetLongitude: 114.9332,
+    },
+  ],
+};

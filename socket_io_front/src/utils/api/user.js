@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 15:13:08
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-27 14:04:14
+ * @LastEditTime: 2024-11-24 11:53:13
  * @FilePath: \Front-end\Vue\Vue3\IM\socket_io\socket_io_front\src\utils\api\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -101,5 +101,41 @@ export function getAllUserDetailFn() {
   return service({
     url,
     method,
+  });
+}
+export function getAttendanceList(params) {
+  const method = "get";
+  const url = "/attendance";
+  return service({
+    url,
+    method,
+    params,
+  });
+}
+export function insertAttendance(data) {
+  const method = "post";
+  const url = "/attendance";
+  return service({
+    url,
+    method,
+    data,
+  });
+}
+export function getUserAttendanceList(params) {
+  const method = "get";
+  const url = "/userattendance";
+  return service({
+    url,
+    method,
+    params,
+  });
+}
+export function absence(data) {
+  const method = "post";
+  const url = "/absence";
+  return service({
+    url,
+    method,
+    data,
   });
 }

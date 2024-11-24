@@ -13,9 +13,14 @@ import router from "./router";
 import pinia from "@/stores";
 import "@/assets/iconfont/iconfont";
 import data from "../public/version.json";
+import ElementPlus from 'element-plus'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 // import "../service-worker";
 const app = createApp(App);
 app.config.globalProperties.$timestamp = data.timestamp;
 window.__VUE_APP__ = app;
 app.use(router).use(pinia);
+app.use(ElementPlus, {
+  locale: zhCn,
+})
 app.mount("#app");

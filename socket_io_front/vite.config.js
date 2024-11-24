@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 10:40:31
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-10-25 14:57:33
+ * @LastEditTime: 2024-11-24 11:39:53
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\vite.config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,6 +13,9 @@ import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import path from "path";
 import pxtovw from "postcss-px-to-viewport";
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 const loder_pxtovw = pxtovw({
   //这里是设计稿宽度 自己修改
   viewportWidth: 1536,
@@ -22,7 +25,16 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const { BASE_URL, VITE_BASE_API_URL } = env;
   return {
-    plugins: [vue(), vueDevTools()],
+    plugins: [
+      vue(),
+      vueDevTools(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ],
     css: {
       postcss: {
         plugins: [loder_pxtovw],

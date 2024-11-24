@@ -109,7 +109,7 @@ async function submitHandle() {
 <style scoped>
 .edit-container {
     flex: 1;
-    height: 95vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

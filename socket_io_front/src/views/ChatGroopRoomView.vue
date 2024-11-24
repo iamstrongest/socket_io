@@ -408,7 +408,7 @@ onBeforeUnmount(() => {
 
 .group-user-tontainer {
     width: 200px;
-    height: 95vh;
+    height: 100vh;
     display: flex;
     overflow-y: scroll;
     overflow-x: hidden;

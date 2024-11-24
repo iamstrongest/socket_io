@@ -19,6 +19,7 @@ import {
   createGroupChatTable,
   createGRoupRequestTable,
 } from "./model/group_chat.js";
+import { createAttendanceTable } from "./model/attendance.js";
 // 创建数据库连接
 const db = mysql.createConnection({
   host: dbConfig.host,
@@ -83,6 +84,8 @@ function initializeDatabase() {
         createGroupChatTable(db, callback);
         // 创建群聊申请表
         createGRoupRequestTable(db, callback);
+        // 创建考勤表
+        createAttendanceTable(db, callback);
       });
     }
   );

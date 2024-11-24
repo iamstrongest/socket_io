@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "10742566",
+      "name": "外出考勤",
+      "font_class": "waichukaoqin",
+      "unicode": "e69a",
+      "unicode_decimal": 59034
+    },
+    {
       "icon_id": "10056821",
       "name": "搜索",
       "font_class": "sousuo",

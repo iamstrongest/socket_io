@@ -14,6 +14,10 @@ import {
   updateAvatarController,
   updateUserinfoController,
   refreshController,
+  getAttendanceController,
+  insertAttendanceController,
+  getUserAttendanceController,
+  absenceController
 } from "../controller/user.js";
 import middlewares from "../middlewares/index.js";
 import { registerForm, updateAvatar } from "../config/form.js";
@@ -52,3 +56,19 @@ export const getAllUserDetailRoute = router.get(
   getAllUserDetailController
 );
 export const getFriendRoute = router.get("/friend", getFriendController);
+export const getAttendanceRoute = router.get(
+  "/attendance",
+  getAttendanceController
+);
+export const insertAttendanceRoute = router.post(
+  "/attendance",
+  insertAttendanceController
+);
+export const getUserAttendanceRoute = router.get(
+  "/userattendance",
+  getUserAttendanceController
+);
+export const absenceRoute = router.post(
+  "/absence",
+  absenceController
+);

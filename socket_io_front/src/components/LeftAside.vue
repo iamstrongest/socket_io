@@ -125,7 +125,7 @@ aside {
     position: relative;
     box-sizing: border-box;
     padding: 1px;
-    height: 95vh;
+    height: 100vh;
     flex-direction: column;
     align-items: center;
     z-index: 10;
@@ -211,7 +211,7 @@ aside .hover:hover {
     /* 确保在其他元素上方 */
     min-width: 150px;
     /* 最小宽度 */
-    height: 180px;
+    height: 210px;
     font-size: 16px;
     color: var(--more_font_color);
     ;

@@ -335,7 +335,7 @@ onUnmounted(() => {
 <style scoped>
 .FriendList-container {
     width: 150px;
-    height: 95vh;
+    height: 100vh;
     position: relative;
     padding: 1px;
     box-sizing: border-box;
