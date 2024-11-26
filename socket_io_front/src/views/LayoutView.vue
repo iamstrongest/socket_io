@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-10-20 14:23:48
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-26 19:15:50
+ * @LastEditTime: 2024-11-26 23:31:29
  * @FilePath: \Vue\Vue3\IM\socket_io\socket_io_front\src\views\LayoutView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -56,7 +56,7 @@ function agreeClick() {
         videoRoomId: videoStore.videoRoomId
     })
 }
-function rejuectClick() {
+function rejectClick() {
     changeVideoBtnsStatus(false);
     const socket = getSocket();
     socket.emit("reject", {
@@ -175,8 +175,8 @@ function createRoomRequest(data) {
     }
 }
 function rejectJoinRoom(data) {
-    console.log(data);
     changeVideoBtnsStatus(false);
+    changeVideoStatus(false);
     if (Notification.permission === "granted") {
         sendNotification(data);
     } else {
@@ -235,7 +235,7 @@ onUnmounted(() => {
                 <use xlink:href="#icon-tonghuazhong"></use>
             </svg>
         </div>
-        <div class="svg" @click="rejuectClick">
+        <div class="svg" @click="rejectClick">
             <svg class="icon" aria-hidden="true">
                 <use xlink:href="#icon-jujuetonghua"></use>
             </svg>

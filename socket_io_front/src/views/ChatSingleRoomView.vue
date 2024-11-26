@@ -105,8 +105,6 @@ function iconHandleClick(id) {
         videoStore.createVidemoRoomId();
         const receiveId = parseInt(route.query.receiveId)
         videoStore.setVideoRoomReceiveId(receiveId);
-        console.log(videoStore);
-
         socket.emit("createRoom", {
             userId: userStore.user.info.id,
             username: userStore.user.info.username,

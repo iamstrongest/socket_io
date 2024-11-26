@@ -8,6 +8,7 @@ const videoStore = useVideoStore();
 const userStore = useUserStore();
 const local_video = useTemplateRef("localVideo");
 const remote_video = useTemplateRef("remoteVideo");
+const hasVideo = ref(false);
 const PeerConnection =
     window.RTCPeerConnection ||
     window.PeerConnection ||
@@ -21,9 +22,16 @@ const nativeRTCSessionDescription =
 // WebRTC连接对象
 let peerConnection;
 const video = inject("showVideo");
+const configuration = {
+    iceServers: [
+        {
+            urls: 'stun:stun.l.google.com:19302'  // Google's public STUN server
+        }
+    ]
+};
 //初始化PC源
 function initPC() {
-    let pc = new PeerConnection();
+    let pc = new PeerConnection(configuration);
     pc.onicecandidate = (evt) => {
         if (evt.candidate) {
             socket.emit("need_ice_candidate", {
@@ -42,7 +50,7 @@ function initPC() {
     return pc;
 }
 socket.on("create_offer", async (res) => {
-    console.log(res.msg);
+    hasVideo.value = true;
     peerConnection = initPC();
     let stream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -63,7 +71,8 @@ socket.on("create_offer", async (res) => {
 });
 socket.on("recive_offer", async (res) => {
     //当收到发送者请求后,对于接受者，设置音频源 
-    let pc = new PeerConnection();
+    hasVideo.value = true;
+    let pc = new PeerConnection(configuration);
     pc.onicecandidate = (evt) => {
         if (evt.candidate) {
             socket.emit("need_ice_candidate", {
@@ -127,12 +136,14 @@ socket.on("recive_socket_leave", (res) => {
 });
 function endClick(event) {
     event.stopPropagation();
-    // video.changeVideoStatus(false);
-    // // 先将本地以及远程的摄像头关闭
-    // local_video.value.srcObject.getTracks().forEach((track) => {
-    //     track.stop(); // 停止摄像头轨道
-    // });
-    // local_video.value.srcObject = null;
+    if (!hasVideo.value) {
+        socket.emit("reject", {
+            username: userStore.user.info.username,
+            videoRoomId: videoStore.videoRoomId
+        })
+        video.changeVideoStatus(false);
+        return;
+    }
     socket.emit("socket_leave", {
         videoRoomId: videoStore.videoRoomId,
         userId: userStore.user.info?.id,

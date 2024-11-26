@@ -119,6 +119,7 @@ export function webRtc(socket, io) {
     setTimeout(() => {
       io.sockets.adapter.rooms.delete(videoRoomId); // 删除某个房间
     }, 100);
+
     // socket.leave(roomId); // 将某个房间的特定的连接的websocket对象断开
 
     // if (io.sockets.adapter.rooms.get(roomId) === undefined) {
