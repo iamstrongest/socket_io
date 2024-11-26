@@ -7,10 +7,11 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <script setup>
-import { onMounted, ref, computed, useTemplateRef, nextTick, onBeforeUnmount, watch, provide } from 'vue';
+import { onMounted, ref, computed, useTemplateRef, nextTick, onBeforeUnmount, watch, provide, inject } from 'vue';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { getChat } from "@/utils/api/chat"
 import { useUserStore } from '@/stores/user';
+import { useVideoStore } from '@/stores/video';
 // import { socket } from "@/socket";
 import { getSocket } from "@/socket";
 import { throttle } from "@/utils/utilFn"
@@ -18,6 +19,7 @@ import { useChatStore } from '@/stores/chat'
 const route = useRoute();
 const userStore = useUserStore();
 const chatStore = useChatStore();
+const videoStore = useVideoStore();
 const chatList = ref([]);
 const chatMessageRef = ref();
 const editableDivRef = ref();
@@ -32,12 +34,13 @@ provide('scrollFn', () => {
         }
     })
 })
+const video = inject("showVideo");
 let offsetX, offsetY;
 const icons = [
-    { class: "#icon-biaoqing", id: 1, title: "表情包" },
-    { class: "#icon-stationary_file", id: 2, title: "发送文件" },
-    { class: "#icon-shipin", id: 3, title: "视频通话" },
-    { class: "#icon-gengduox", id: 4, title: "更多" },
+    { class: "#icon-biaoqing", id: 1, title: "表情包-暂未开发" },
+    { class: "#icon-stationary_file", id: 2, title: "发送文件-暂未开发" },
+    { class: "#icon-shipin", id: 3, title: "视频通话-待测试" },
+    { class: "#icon-gengduox", id: 4, title: "更多-暂未开发" },
 ]
 const isMove = ref(false);
 watch(() => route.params.roomId, async (newValue, oldValue) => {
@@ -94,6 +97,23 @@ async function addData(params) {
         page.value++;
     }
     return data;
+}
+function iconHandleClick(id) {
+    if (id === 3) {
+        video.changeVideoStatus(true);
+        const socket = getSocket();
+        videoStore.createVidemoRoomId();
+        const receiveId = parseInt(route.query.receiveId)
+        videoStore.setVideoRoomReceiveId(receiveId);
+        console.log(videoStore);
+
+        socket.emit("createRoom", {
+            userId: userStore.user.info.id,
+            username: userStore.user.info.username,
+            receiveId,
+            videoRoomId: videoStore.videoRoomId
+        })
+    }
 }
 async function callback(event) {
     if (event.target?.scrollTop < 10 && page.value > totalPage.value) {
@@ -191,7 +211,7 @@ onBeforeUnmount(() => {
         </div>
         <div class="send-container" ref="sendContainerRef">
             <div class="icons-containers">
-                <div class="icons" v-for="icon in icons" :key="icon.id" title="功能未开发">
+                <div class="icons" v-for="icon in icons" :key="icon.id" :title="icon.title" @click="iconHandleClick(icon.id)">
                     <svg class="icon" aria-hidden="true">
                         <use :xlink:href="icon.class"></use>
                     </svg>

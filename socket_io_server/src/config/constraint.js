@@ -21,6 +21,8 @@ export const chatType = {
   3: "图片",
   4: "视频",
   5: "其它文件",
+  6: "语音通话",
+  7: "视频通话",
 };
 export const chatRoomType = {
   1: 1, //私聊
@@ -123,8 +125,8 @@ export const geolocation = {
     },
     // 江西师范大学青山湖校区
     {
-      targetLatitude: 28.6533,
-      targetLongitude: 115.8617,
+      targetLatitude: 28.677068,
+      targetLongitude: 115.923027,
       allowedRadius: 1500,
     },
   ],

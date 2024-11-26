@@ -18,6 +18,7 @@ const options = {
 import { login, logout } from "./user.js";
 import { sendSingleChat, sendGroupChat } from "./chat.js";
 import { sendNotify } from "./notify.js";
+import { webRtc } from "./webRtc.js";
 export function ioInit(httpServer) {
   let io = new Server(httpServer, options);
   io.on("connection", (socket) => {
@@ -36,6 +37,7 @@ export function ioInit(httpServer) {
     sendSingleChat(socket, io);
     sendGroupChat(socket, io);
     logout(socket, io);
+    webRtc(socket, io);
     // console.log(transport);
     // 当 WebSocket 连接被切断时，或当用户刷新页面时会触发disconnect事件
     socket.on("disconnect", (reason, details) => {

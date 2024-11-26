@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4880307",
+      "name": "拒绝通话",
+      "font_class": "jujuetonghua",
+      "unicode": "e6de",
+      "unicode_decimal": 59102
+    },
+    {
+      "icon_id": "21173425",
+      "name": "通话中",
+      "font_class": "tonghuazhong",
+      "unicode": "e696",
+      "unicode_decimal": 59030
+    },
+    {
+      "icon_id": "30017594",
+      "name": "拒绝视频",
+      "font_class": "jujueshipin",
+      "unicode": "e829",
+      "unicode_decimal": 59433
+    },
+    {
+      "icon_id": "35674204",
+      "name": "挂断",
+      "font_class": "guaduan",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
       "icon_id": "10742566",
       "name": "外出考勤",
       "font_class": "waichukaoqin",
