@@ -2,7 +2,7 @@
  * @Author: strongest-qiang 1309148358@qq.com
  * @Date: 2024-11-09 18:00:57
  * @LastEditors: strongest-qiang 1309148358@qq.com
- * @LastEditTime: 2024-11-26 19:42:40
+ * @LastEditTime: 2024-11-26 21:27:44
  * @FilePath: \socket_io\socket_io_server\src\socket\webRtc.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -85,7 +85,7 @@ export function webRtc(socket, io) {
   socket.on("answer", (data) => {
     // 接受者的userId,以及接收者的sdp
     const { userId, videoRoomId, sdp, username } = data;
-    io.to(roomId)
+    io.to(videoRoomId)
       .except(socket.id)
       .emit("remote_dsp", {
         userId,

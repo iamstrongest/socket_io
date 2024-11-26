@@ -1,5 +1,5 @@
 <script setup>
-import { useTemplateRef, inject, onMounted } from "vue";
+import { useTemplateRef, inject, onMounted, onUnmounted } from "vue";
 import { useVideoStore } from '@/stores/video';
 import { useUserStore } from "@/stores/user.js"
 import { getSocket } from "@/socket";
@@ -68,7 +68,8 @@ socket.on("recive_offer", async (res) => {
         if (evt.candidate) {
             socket.emit("need_ice_candidate", {
                 videoRoomId: videoStore.videoRoomId,
-                userId: remoteUserId.value,
+                userId: userStore.user.info.id,
+                username: userStore.user.info?.username,
                 candidate: evt.candidate,
             });
         }
@@ -141,6 +142,14 @@ function endClick(event) {
 }
 onMounted(async () => {
 })
+onUnmounted(() => {
+    socket.off("create_offer");
+    socket.off("recive_offer");
+    socket.off("remote_dsp");
+    socket.off("ice_candidate");
+    socket.off("recive_socket_leave");
+})
+
 </script>
 <template>
     <div class="container">
@@ -162,9 +171,9 @@ onMounted(async () => {
     border-radius: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; */
 }
 
 h3 {
@@ -175,11 +184,13 @@ h3 {
 
 video {
     width: 400px;
-    height: 100%;
+    height: 300px;
 }
 
 .svg {
     width: 50px;
     height: 50px;
+    margin: 0 auto;
+    cursor: pointer;
 }
 </style>
